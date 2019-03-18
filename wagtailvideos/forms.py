@@ -34,6 +34,10 @@ def formfield_for_dbfield(db_field, **kwargs):
     return db_field.formfield(**kwargs)
 
 
+
+
+
+
 def get_video_form(model):
     fields = model.admin_form_fields
     if 'collection' not in fields:
@@ -57,6 +61,7 @@ def get_video_form(model):
             'file': forms.FileInput(),
             'thumbnail': forms.FileInput(),
         })
+
 
 
 class VideoTranscodeAdminForm(forms.Form):

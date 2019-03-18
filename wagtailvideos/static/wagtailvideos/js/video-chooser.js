@@ -7,6 +7,7 @@ function createVideoChooser(id) {
     $('.action-choose', chooserElement).click(function() {
         ModalWorkflow({
             url: window.chooserUrls.videoChooser,
+            onload: VIDEO_CHOOSER_MODAL_ONLOAD_HANDLERS,
             responses: {
                 videoChosen: function(videoData) {
                     input.val(videoData.id);

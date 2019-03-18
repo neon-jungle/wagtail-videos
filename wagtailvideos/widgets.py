@@ -30,3 +30,10 @@ class AdminVideoChooser(AdminChooser):
 
     def render_js_init(self, id_, name, value):
         return "createVideoChooser({0});".format(json.dumps(id_))
+
+
+    class Media:
+        js = [
+            'wagtailvideos/js/video-chooser-modal.js',
+            'wagtailvideos/js/video-chooser.js',
+        ]
