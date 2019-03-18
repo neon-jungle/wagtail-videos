@@ -9,6 +9,7 @@ import threading
 from contextlib import contextmanager
 
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.core.exceptions import SuspiciousFileOperation
 from django.core.files.base import ContentFile
 from django.core.files.temp import NamedTemporaryFile
@@ -232,6 +233,26 @@ class Video(AbstractVideo):
         'thumbnail',
         'tags',
     )
+
+def get_video_model():
+    from django.conf import settings
+    from django.apps import apps
+
+    try:
+        app_label, model_name = settings.WAGTAILMEDIA_VIDEO_MODEL.split('.')
+    except AttributeError:
+        return Video
+    except ValueError:
+        raise ImproperlyConfigured("WAGTAILMEDIA_VIDEO_MODEL must be of the form 'app_label.model_name'")
+
+    video_model = apps.get_model(app_label, model_name)
+    if video_model is None:
+        raise ImproperlyConfigured(
+            "WAGTAILMEDIA_VIDEO_MODEL refers to model '%s' that has not been installed" %
+            settings.WAGTAILMEDIA_VIDEO_MODEL
+        )
+    return video_model
+
 
 
 class TranscodingThread(threading.Thread):

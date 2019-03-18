@@ -16,7 +16,7 @@
     <ul class="listing horiz images chooser">
         {% for video in videos %}
             <li>
-                <a class="image-choice" href="{% if will_select_format %}{% url 'wagtailvideos:chooser_select_format' video.id %}{% else %}{% url 'wagtailvideos:video_chosen' video.id %}{% endif %}">
+                <a class="video-choice" href="{% if will_select_format %}{% url 'wagtailvideos:chooser_select_format' video.id %}{% else %}{% url 'wagtailvideos:video_chosen' video.id %}{% endif %}">
                     <div class="image">
                         {% if video.thumbnail %}
                         <img src='{{video.thumbnail.url}}' width="165" height="165" class="show-transparency">

@@ -1,0 +1,30 @@
+{% load wagtailimages_tags %}
+{% load i18n %}
+{% trans "Choose a format" as choose_str %}
+{% include "wagtailadmin/shared/header.html" with title=choose_str %}
+
+<div class="row row-flush nice-padding">
+    <div class="col6">
+        <a class="image-choice" href="{% if will_select_format %}{% url 'wagtailvideos:chooser_select_format' video.id %}{% else %}{% url 'wagtailvideos:video_chosen' video.id %}{% endif %}">
+            <div class="image">
+                {% if video.thumbnail %}
+                <img src='{{video.thumbnail.url}}' width="165" height="165" class="show-transparency">
+                {% else %}
+                <img width="165" height="165" class="show-transparency">
+                {% endif %}
+            </div>
+            <h3>{{ video.title|ellipsistrim:60 }}</h3>
+        </a>
+    </div>
+    <div class="col6">
+{#        <form action="{% url 'wagtailimages:chooser_select_format' image.id %}" method="POST" novalidate>#}
+{#            {% csrf_token %}#}
+{#            <ul class="fields">#}
+{#                {% for field in form %}#}
+{#                    {% include "wagtailadmin/shared/field_as_li.html" with field=field %}#}
+{#                {% endfor %}#}
+{#                <li><input type="submit" value="{% trans 'Insert image' %}"  class="button" /></li>#}
+{#            </ul>#}
+{#        </form>#}
+    </div>
+</div>
