@@ -316,7 +316,6 @@ class TestVideoChooserView(TestCase, WagtailTestUtils):
         response = self.get()
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'wagtailvideos/chooser/chooser.html')
-        self.assertTemplateUsed(response, 'wagtailvideos/chooser/chooser.js')
 
     def test_search(self):
         response = self.get({'q': "Hello"})
@@ -364,7 +363,6 @@ class TestVideoChooserChosenView(TestCase, WagtailTestUtils):
     def test_simple(self):
         response = self.get()
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'wagtailvideos/chooser/video_chosen.js')
 
 
 class TestVideoChooserUploadView(TestCase, WagtailTestUtils):
@@ -378,7 +376,6 @@ class TestVideoChooserUploadView(TestCase, WagtailTestUtils):
         response = self.get()
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'wagtailvideos/chooser/chooser.html')
-        self.assertTemplateUsed(response, 'wagtailvideos/chooser/chooser.js')
 
     def test_upload(self):
         response = self.client.post(reverse('wagtailvideos:chooser_upload'), {
