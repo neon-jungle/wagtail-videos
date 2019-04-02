@@ -123,11 +123,13 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
 
     def get_file_hash(self):
         if self.file_hash == '':
+            block_size=256*128
+            file_hash = hashlib.sha1()
             with self.open_file() as f:
-                self._set_file_hash(f.read())
-
+                for chunk in iter(lambda: f.read(block_size), b''):
+                    file_hash.update(chunk)
+            self.file_hash = file_hash.hexdigest()
             self.save(update_fields=['file_hash'])
-
         return self.file_hash
 
     def get_upload_to(self, filename):
