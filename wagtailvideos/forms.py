@@ -59,6 +59,7 @@ def get_video_form(model):
         })
 
 
+
 class VideoTranscodeAdminForm(forms.Form):
     media_format = EnumField(MediaFormats)
     quality = EnumField(VideoQuality)
