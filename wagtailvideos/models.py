@@ -1,3 +1,4 @@
+import hashlib
 import logging
 import mimetypes
 import os
@@ -89,6 +90,7 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
     tags = TaggableManager(help_text=None, blank=True, verbose_name=_('tags'))
 
     file_size = models.PositiveIntegerField(null=True, editable=False)
+    file_hash = models.CharField(max_length=40, blank=True, editable=False)
 
     objects = VideoQuerySet.as_manager()
 
@@ -115,6 +117,18 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
             self.save(update_fields=['file_size'])
 
         return self.file_size
+
+    def _set_file_hash(self, file_contents):
+        self.file_hash = hashlib.sha1(file_contents).hexdigest()
+
+    def get_file_hash(self):
+        if self.file_hash == '':
+            with self.open_file() as f:
+                self._set_file_hash(f.read())
+
+            self.save(update_fields=['file_hash'])
+
+        return self.file_hash
 
     def get_upload_to(self, filename):
         folder_name = 'original_videos'
