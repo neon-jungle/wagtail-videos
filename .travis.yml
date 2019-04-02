@@ -13,12 +13,11 @@ python:
   - 3.4
   - 3.5
   - 3.6
+  - 3.7
 
 env:
-  - DJANGO='111' WAGTAIL='20'
-  - DJANGO='111' WAGTAIL='21'
-  - DJANGO='20' WAGTAIL='20'
-  - DJANGO='20' WAGTAIL='21'
+  - DJANGO='20' WAGTAIL='24'
+  - DJANGO='21' WAGTAIL='24'
 
 
 matrix:
