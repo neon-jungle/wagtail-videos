@@ -74,6 +74,14 @@ be used to create new transcodes. It is assumed that your compiled
 version of ffmpeg has the matching codec libraries required for the
 transcode.
 
+Settings:
+~~~~~~~~~
+
+The following settings are available to control the behavior of the module.
+
+* `WAGTAILVIDEOS_MAX_UPLOAD_SIZE` - Maximum upload size of video files in bytes. Defaults to 1GB
+* `WAGTAILVIDEOS_CREATE_FILE_HASH` - If True, a file hash will be calculated and added to the model. Defaults to False.
+
 Future features
 ---------------
 
