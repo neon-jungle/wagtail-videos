@@ -16,3 +16,4 @@ class TestVideoModel(WagtailTestUtils, TestCase):
         )
         video.save()
         assert video.file_hash
+        assert video.file_size
