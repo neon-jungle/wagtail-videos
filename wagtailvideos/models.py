@@ -378,16 +378,20 @@ def video_delete(sender, instance, **kwargs):
 # Fields that need the actual video file to create
 @receiver(post_save, sender=Video)
 def video_saved(sender, instance, **kwargs):
+
+    if hasattr(instance, '_from_signal'):
+        return
+
     has_changed = instance._initial_file is not instance.file
+    create_file_hash = getattr(
+        settings, 'WAGTAILVIDEOS_CREATE_FILE_HASH', False
+    )
 
     # Handle file hash regardless of anything else
-    if has_changed and not kwargs['update_fields']:
+    if has_changed and create_file_hash:
         instance.get_file_hash()
 
     if not ffmpeg.installed():
-        return
-
-    if hasattr(instance, '_from_signal'):
         return
 
     filled_out = instance.thumbnail is not None and instance.duration is not None
