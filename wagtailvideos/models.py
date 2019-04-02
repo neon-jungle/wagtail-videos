@@ -125,7 +125,7 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
         if self.file_hash == '':
             block_size=256*128
             file_hash = hashlib.sha1()
-            with self.open_file() as f:
+            with open(self.file, 'rb') as f:
                 for chunk in iter(lambda: f.read(block_size), b''):
                     file_hash.update(chunk)
             self.file_hash = file_hash.hexdigest()
