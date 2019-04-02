@@ -414,3 +414,9 @@ class VideoTranscode(AbstractVideoTranscode):
 @receiver(pre_delete, sender=VideoTranscode)
 def transcode_delete(sender, instance, **kwargs):
     instance.file.delete(False)
+
+
+# Calculate file hash of video
+@receiver(post_save, sender=Video)
+def create_file_hash(sender, instance, created, **kwargs):
+    instance.get_file_hash()
