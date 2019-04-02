@@ -402,7 +402,7 @@ def video_saved(sender, instance, **kwargs):
     has_changed = instance._initial_file is not instance.file
 
     # Handle file hash regardless of anything else
-    if has_changed:
+    if has_changed and not kwargs['update_fields']:
         instance.get_file_hash()
 
     if not ffmpeg.installed():
