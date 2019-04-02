@@ -358,13 +358,18 @@ def video_delete(sender, instance, **kwargs):
 # Fields that need the actual video file to create
 @receiver(post_save, sender=Video)
 def video_saved(sender, instance, **kwargs):
+    has_changed = instance._initial_file is not instance.file
+
+    # Handle file hash regardless of anything else
+    if has_changed:
+        instance.get_file_hash()
+
     if not ffmpeg.installed():
         return
 
     if hasattr(instance, '_from_signal'):
         return
 
-    has_changed = instance._initial_file is not instance.file
     filled_out = instance.thumbnail is not None and instance.duration is not None
     if has_changed or not filled_out:
         with get_local_file(instance.file) as file_path:
@@ -414,9 +419,3 @@ class VideoTranscode(AbstractVideoTranscode):
 @receiver(pre_delete, sender=VideoTranscode)
 def transcode_delete(sender, instance, **kwargs):
     instance.file.delete(False)
-
-
-# Calculate file hash of video
-@receiver(post_save, sender=Video)
-def create_file_hash(sender, instance, created, **kwargs):
-    instance.get_file_hash()
