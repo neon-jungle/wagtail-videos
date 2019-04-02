@@ -129,18 +129,14 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
 
         return self.file_size
 
-    def _set_file_hash(self, file_contents):
-        self.file_hash = hashlib.sha1(file_contents).hexdigest()
-
     def get_file_hash(self):
-        if self.file_hash == '':
-            block_size=256*128
-            file_hash = hashlib.sha1()
-            with self.open_file() as f:
-                for chunk in iter(lambda: f.read(block_size), b''):
-                    file_hash.update(chunk)
-            self.file_hash = file_hash.hexdigest()
-            self.save(update_fields=['file_hash'])
+        block_size=256*128
+        file_hash = hashlib.sha1()
+        with self.open_file() as f:
+            for chunk in iter(lambda: f.read(block_size), b''):
+                file_hash.update(chunk)
+        self.file_hash = file_hash.hexdigest()
+        self.save(update_fields=['file_hash'])
         return self.file_hash
 
     def get_upload_to(self, filename):
@@ -382,18 +378,14 @@ def video_saved(sender, instance, **kwargs):
     if hasattr(instance, '_from_signal'):
         return
 
-    has_changed = instance._initial_file is not instance.file
+    if not ffmpeg.installed():
+        return
+
     create_file_hash = getattr(
         settings, 'WAGTAILVIDEOS_CREATE_FILE_HASH', False
     )
 
-    # Handle file hash regardless of anything else
-    if has_changed and create_file_hash:
-        instance.get_file_hash()
-
-    if not ffmpeg.installed():
-        return
-
+    has_changed = instance._initial_file is not instance.file
     filled_out = instance.thumbnail is not None and instance.duration is not None
     if has_changed or not filled_out:
         with get_local_file(instance.file) as file_path:
@@ -404,6 +396,8 @@ def video_saved(sender, instance, **kwargs):
                 instance.duration = ffmpeg.get_duration(file_path)
 
     instance.file_size = instance.file.size
+    if has_changed and create_file_hash and not kwargs['update_fields']:
+        instance.get_file_hash()
     instance._from_signal = True
     instance.save()
     del instance._from_signal
