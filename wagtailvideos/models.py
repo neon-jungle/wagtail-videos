@@ -399,16 +399,14 @@ def video_saved(sender, instance, **kwargs):
     if hasattr(instance, '_from_signal'):
         return
 
-    if not ffmpeg.installed():
-        return
-
     create_file_hash = getattr(
         settings, 'WAGTAILVIDEOS_CREATE_FILE_HASH', False
     )
 
     has_changed = instance._initial_file is not instance.file
     filled_out = instance.thumbnail is not None and instance.duration is not None
-    if has_changed or not filled_out:
+
+    if (has_changed or not filled_out) and ffmpeg.installed():
         with get_local_file(instance.file) as file_path:
             if has_changed or instance.thumbnail is None:
                 instance.thumbnail = ffmpeg.get_thumbnail(file_path)
@@ -417,8 +415,10 @@ def video_saved(sender, instance, **kwargs):
                 instance.duration = ffmpeg.get_duration(file_path)
 
     instance.file_size = instance.file.size
+
     if has_changed and create_file_hash and not kwargs['update_fields']:
         instance.get_file_hash()
+
     instance._from_signal = True
     instance.save()
     del instance._from_signal
