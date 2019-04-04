@@ -8,7 +8,6 @@ env:
   matrix:
     - TOX_ENV=flake8,isort
 
-
 python:
   - 3.4
   - 3.5
