@@ -5,6 +5,7 @@ from enumchoicefield.forms import EnumField
 from wagtail.admin import widgets
 from wagtail.admin.forms import (
     BaseCollectionMemberForm, collection_member_permission_formset_factory)
+from wagtail.images.fields import WagtailImageField
 
 from wagtailvideos.fields import WagtailVideoField
 from wagtailvideos.models import MediaFormats, Video, VideoQuality
@@ -29,6 +30,8 @@ def formfield_for_dbfield(db_field, **kwargs):
     # Check if this is the file field
     if db_field.name == 'file':
         return WagtailVideoField(**kwargs)
+    elif db_field.name == 'thumbnail':
+        return WagtailImageField(**kwargs)
 
     # For all other fields, just call its formfield() method.
     return db_field.formfield(**kwargs)
@@ -55,7 +58,6 @@ def get_video_form(model):
         widgets={
             'tags': widgets.AdminTagWidget,
             'file': forms.FileInput(),
-            'thumbnail': forms.FileInput(),
         })
 
 
