@@ -46,7 +46,7 @@ def get_thumbnail(file_path):
         raise RuntimeError('ffmpeg is not installed')
 
     file_name = os.path.basename(file_path)
-    thumb_name = '{}_thumb{}'.format(os.path.splitext(file_name)[0], '.jpg')
+    thumb_name = '{}_thumb_autogen{}'.format(os.path.splitext(file_name)[0], '.jpg')
 
     try:
         output_dir = tempfile.mkdtemp()
