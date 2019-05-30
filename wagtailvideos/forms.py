@@ -30,8 +30,6 @@ def formfield_for_dbfield(db_field, **kwargs):
     # Check if this is the file field
     if db_field.name == 'file':
         return WagtailVideoField(**kwargs)
-    elif db_field.name == 'thumbnail':
-        return WagtailImageField(**kwargs)
 
     # For all other fields, just call its formfield() method.
     return db_field.formfield(**kwargs)
