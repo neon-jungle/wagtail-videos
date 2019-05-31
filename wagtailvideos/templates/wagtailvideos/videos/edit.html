@@ -1,5 +1,20 @@
-{% extends "wagtailadmin/base.html" %} {% load staticfiles wagtailadmin_tags i18n wagtailvideos_tags %} {% block titletag %}{% blocktrans with title=video.title %}Editing video {{ title }}{% endblocktrans %}{% endblock %} {% block extra_css %}
-<link rel="stylesheet" href="{% static 'wagtailvideos/css/edit-video.css' %}" type="text/css" /> {% endblock %} {% block extra_js %} {{ block.super }} {% url 'wagtailadmin_tag_autocomplete' as autocomplete_url %}
+{% extends "wagtailadmin/base.html" %} {% load staticfiles wagtailadmin_tags i18n wagtailvideos_tags %} {% block titletag %}{% blocktrans with title=video.title %}Editing video {{ title }}{% endblocktrans %}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'wagtailvideos/css/edit-video.css' %}" type="text/css" />
+<style>
+input[name="thumbnail-clear"] {
+    margin-top: 25px;
+    display: table;
+}
+label[for="thumbnail-clear_id"] {
+    float: initial;
+    position: relative;
+    top: -15px;
+    left: 25px;
+}
+</style>
+{% endblock %}
+{% block extra_js %} {{ block.super }} {% url 'wagtailadmin_tag_autocomplete' as autocomplete_url %}
 <script>
     $(function() {
         $('#id_tags').tagit({
@@ -17,7 +32,12 @@
         <form action="{% url 'wagtailvideos:edit' video.id %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <ul class="fields">
-                {% for field in form %} {% if field.name == 'file' %} {% include "wagtailvideos/videos/_file_field_as_li.html" %} {% elif field.is_hidden %} {{ field }} {% else %} {% include "wagtailadmin/shared/field_as_li.html" %} {% endif %} {% endfor %}
+                {% for field in form %}
+                    {% if field.name == 'file' %} {% include "wagtailvideos/videos/_file_field_as_li.html" %}
+                    {% elif field.is_hidden %} {{ field }}
+                    {% else %} {% include "wagtailadmin/shared/field_as_li.html" %} 
+                    {% endif %}
+                {% endfor %}
                 <li>
                     <input type="submit" class="button" value="{% trans 'Save' %}" /> {% if user_can_delete %}
                     <a href="{% url 'wagtailvideos:delete' video.id %}" class="button button-secondary no">{% trans "Delete video" %}</a> {% endif %}
