@@ -324,6 +324,9 @@ def video_saved(sender, instance, **kwargs):
     if not ffmpeg.installed():
         return
 
+    if 'raw' in kwargs and kwargs['raw']:
+        return
+
     if hasattr(instance, '_from_signal'):
         return
 
