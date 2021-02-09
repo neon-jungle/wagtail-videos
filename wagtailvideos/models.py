@@ -183,7 +183,12 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
     @classmethod
     def get_track_listing_model(cls):
         return cls.track_listing.related.related_model
-
+    
+    @property
+    def content_type(self):
+        mime = mimetypes.MimeTypes()
+        mimetype = mime.guess_type(self.url)[0] or mime.guess_type(self.filename())[0]
+    
     def video_tag(self, attrs=None):
         if attrs is None:
             attrs = {}
@@ -199,7 +204,7 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
 
         mime = mimetypes.MimeTypes()
         sources.append("<source src='{0}' type='{1}'>"
-                       .format(self.url, mime.guess_type(self.url)[0]))
+                       .format(self.url, self.content_type))
 
         sources.append("<p>Sorry, your browser doesn't support playback for this video</p>")
 
@@ -365,7 +370,7 @@ class AbstractVideoTrack(Orderable):
     language = models.CharField(
         max_length=50,
         choices=[(v, k) for k, v in bcp47.languages.items()],
-        default='en', blank=True, help_text='Required if type is "Subtitle"')
+        default='en', blank=True, help_text='Required if type is "Subtitle"', unique=True)
 
     def track_tag(self):
         attrs = {
