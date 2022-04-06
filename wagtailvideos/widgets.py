@@ -19,11 +19,17 @@ class AdminVideoChooser(AdminChooser):
     def render_html(self, name, value, attrs):
         instance, value_data = self.get_instance_and_id(self.video_model, value)
 
+
+        print('------------------------------------')
+        print('self: ', self)
+        print('name: ', name)
         print('value: ', value)
         print('instance: ', instance)
         print('value_data: ', value_data)
 
         original_field_html = super(AdminVideoChooser, self).render_html(name, value, attrs)
+
+        print('original_field_html: ', original_field_html)
 
         return render_to_string("wagtailvideos/widgets/video_chooser.html", {
             'widget': self,
