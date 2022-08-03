@@ -11,24 +11,28 @@ function createVideoChooser(id) {
     //         responses: {
     //             videoChosen: function(videoData) {
     //                 input.val(videoData.id);
-        document.addEventListener('DOMContentLoaded', event => {
-            var input = $('#' + id);
-            let call_url = window.chooserUrls.videoChooser + input.val();
-            $.ajax(call_url).done(function(data) {
-                let videoData = data.result
-                input.val(videoData.id);
-                    previewVideo.attr({
-                        src: videoData.preview.url,
-                        alt: videoData.title
-                    });
-                    chooserElement.removeClass('blank');
-                    editLink.attr('href', videoData.edit_link);
+    document.addEventListener('DOMContentLoaded', event => {
+        var input = $('#' + id);
+        console.log('input: ',input)
+        console.log('id: ',id)
+        let call_url = window.chooserUrls.videoChooser + input.val();
+        console.log('call_url: ',call_url)
+        $.ajax(call_url).done(function (data) {
+            let videoData = data.result
+            console.log('videoData: ',videoData)
+            input.val(videoData.id);
+            previewVideo.attr({
+                src: videoData.preview.url,
+                alt: videoData.title
+            });
+            chooserElement.removeClass('blank');
+            editLink.attr('href', videoData.edit_link);
             //     }
             // }
         });
     });
 
-    $('.action-clear', chooserElement).click(function() {
+    $('.action-clear', chooserElement).click(function () {
         input.val('');
         chooserElement.addClass('blank');
     });
