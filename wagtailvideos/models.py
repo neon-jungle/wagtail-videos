@@ -256,9 +256,23 @@ class TranscodingThread(threading.Thread):
         self.transcode = transcode
 
     def run(self):
+        # Check if Django Storages is installed and if S3 is available.
+        S3Boto3Storage = True
+        try:
+            from storages.backends.s3boto3 import S3Boto3Storage
+        except ImportError:
+            S3Boto3Storage = False
+
         video = self.transcode.video
         media_format = self.transcode.media_format
-        input_file = video.file.path
+
+        # If the file is stored on S3, we need to use the URL instead of the path.
+        storage_backend = video.file.storage
+        if S3Boto3Storage and isinstance(storage_backend, S3Boto3Storage):
+            input_file = video.file.url
+        else:
+            input_file = video.file.path
+        
         output_dir = tempfile.mkdtemp()
         transcode_name = "{0}.{1}".format(
             video.filename(include_ext=False),
