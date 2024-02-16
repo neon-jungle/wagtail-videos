@@ -8,7 +8,7 @@ from wagtail.admin.menu import Menu, MenuItem, SubmenuMenuItem
 from wagtail.admin.panels import InlinePanel
 from wagtail.admin.search import SearchArea
 from wagtail.admin.site_summary import SummaryItem
-from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
+from wagtail_modeladmin.options import ModelAdmin, modeladmin_register
 
 from wagtailvideos import get_video_model, is_modeladmin_installed, urls
 from wagtailvideos.edit_handlers import VideoChooserPanel
