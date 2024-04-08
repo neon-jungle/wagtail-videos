@@ -8,7 +8,7 @@
         window.headerSearch = {
             url: "{% url 'wagtailvideos:index' %}",
             termInput: "#id_q",
-            targetOutput: "#image-results"
+            targetOutput: "#listing-results"
         }
 
         $(function() {
@@ -35,7 +35,7 @@
             </form>
         {% endif %}
 
-        <div id="image-results">
+        <div id="listing-results">
             {% include "wagtailvideos/videos/results.html" %}
         </div>
     </div>

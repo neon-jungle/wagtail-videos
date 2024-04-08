@@ -12,6 +12,7 @@ from wagtail.admin.models import popular_tags_for_model
 from wagtail.contrib.modeladmin.helpers import AdminURLHelper
 from wagtail.models import Collection
 from wagtail.search.backends import get_search_backends
+from wagtail.search.backends import get_search_backend
 
 from wagtailvideos import ffmpeg, get_video_model, is_modeladmin_installed
 from wagtailvideos.forms import VideoTranscodeAdminForm, get_video_form
@@ -41,9 +42,9 @@ def index(request):
     if 'q' in request.GET:
         form = SearchForm(request.GET, placeholder=_("Search videos"))
         if form.is_valid():
-            query_string = form.cleaned_data['q']
-
-            videos = videos.search(query_string)
+            query_string = form.cleaned_data["q"]
+            search_backend = get_search_backend()
+            videos = search_backend.autocomplete(query_string, videos)
     else:
         form = SearchForm(placeholder=_("Search videos"))
 

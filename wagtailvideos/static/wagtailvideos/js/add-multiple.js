@@ -123,7 +123,7 @@ $(function() {
         $.post(this.action, form.serialize(), function(data) {
             if (data.success) {
                 var statusText = $('.status-msg.update-success').text();
-                addMessage('success', statusText);
+                // addMessage('success', statusText);
                 itemElement.slideUp(function() {
                     $(this).remove();
                 });
