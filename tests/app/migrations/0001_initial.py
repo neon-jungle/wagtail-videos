@@ -3,7 +3,6 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import enumchoicefield.fields
 import modelcluster.fields
 import taggit.managers
 import wagtail.fields
@@ -89,8 +88,23 @@ class Migration(migrations.Migration):
             name='CustomVideoTranscode',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('media_format', enumchoicefield.fields.EnumChoiceField(enum_class=wagtailvideos.models.MediaFormats, max_length=4)),
-                ('quality', enumchoicefield.fields.EnumChoiceField(default=wagtailvideos.models.VideoQuality(1), enum_class=wagtailvideos.models.VideoQuality, max_length=7)),
+                ('media_format', models.CharField(
+                    choices=[
+                        ("webm", "VP8 and Vorbis in WebM"),
+                        ("mp4", "H.264 and AAC in Mp4"),
+                        ("ogg", "Theora and Vorbis in Ogg"),
+                    ],
+                    max_length=4,
+                )),
+                ('quality', models.CharField(
+                    choices=[
+                        ("default", "Default"),
+                        ("lowest", "Low"),
+                        ("highest", "High"),
+                    ],
+                    default="default",
+                    max_length=7,
+                )),
                 ('processing', models.BooleanField(default=False)),
                 ('file', models.FileField(blank=True, null=True, upload_to=wagtailvideos.models.get_upload_to, verbose_name='file')),
                 ('error_message', models.TextField(blank=True)),

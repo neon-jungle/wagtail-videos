@@ -1,7 +1,6 @@
 from django import forms
 from django.forms.models import modelform_factory
 from django.utils.translation import gettext as _
-from enumchoicefield.forms import EnumField
 from wagtail.admin import widgets
 from wagtail.admin.forms.collections import (
     BaseCollectionMemberForm, collection_member_permission_formset_factory)
@@ -59,8 +58,8 @@ def get_video_form(model):
 
 
 class VideoTranscodeAdminForm(forms.Form):
-    media_format = EnumField(MediaFormats)
-    quality = EnumField(VideoQuality)
+    media_format = forms.ChoiceField(choices=MediaFormats.choices)
+    quality = forms.ChoiceField(choices=VideoQuality.choices)
 
     def __init__(self, video, data=None, **kwargs):
         super(VideoTranscodeAdminForm, self).__init__(data=data, **kwargs)
