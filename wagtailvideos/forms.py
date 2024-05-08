@@ -5,8 +5,9 @@ from wagtail.admin import widgets
 from wagtail.admin.forms.collections import (
     BaseCollectionMemberForm, collection_member_permission_formset_factory)
 
+from wagtailvideos.enums import MediaFormats, VideoQuality
 from wagtailvideos.fields import WagtailVideoField
-from wagtailvideos.models import MediaFormats, Video, VideoQuality
+from wagtailvideos.models import Video
 from wagtailvideos.permissions import \
     permission_policy as video_permission_policy
 
