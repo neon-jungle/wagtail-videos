@@ -75,7 +75,7 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
     ]
 
     def __init__(self, *args, **kwargs):
-        super(AbstractVideo, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._initial_file = self.file
 
     def get_file_size(self):
@@ -123,9 +123,6 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
 
     def __str__(self):
         return self.title
-
-    def save(self, **kwargs):
-        super(AbstractVideo, self).save(**kwargs)
 
     @property
     def url(self):
@@ -225,7 +222,7 @@ class Video(AbstractVideo):
 
 class TranscodingThread(threading.Thread):
     def __init__(self, transcode, **kwargs):
-        super(TranscodingThread, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.transcode = transcode
 
     def get_file_url(self, file):

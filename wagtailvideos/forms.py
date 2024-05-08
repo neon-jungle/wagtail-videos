@@ -16,7 +16,7 @@ class BaseVideoForm(BaseCollectionMemberForm):
     permission_policy = video_permission_policy
 
     def __init__(self, *args, **kwargs):
-        super(BaseVideoForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # A file is only required if there is not already a file, such as when
         # editing an existing video.  The file field is not used on the
         # multiple-upload forms, so may not be present
@@ -63,7 +63,7 @@ class VideoTranscodeAdminForm(forms.Form):
     quality = forms.ChoiceField(choices=VideoQuality.choices)
 
     def __init__(self, video, data=None, **kwargs):
-        super(VideoTranscodeAdminForm, self).__init__(data=data, **kwargs)
+        super().__init__(data=data, **kwargs)
         self.video = video
 
     def save(self):
