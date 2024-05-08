@@ -22,7 +22,6 @@ setup(
         "django-enumchoicefield>=1.1.0",
         "bcp47==0.0.4",
     ],
-    extras_require={"testing": ["mock==2.0.0"]},
     zip_safe=False,
     license="BSD License",
     packages=find_packages(),
