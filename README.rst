@@ -178,7 +178,7 @@ Same as Wagtail Images, a custom model can be used to replace the built in Video
 Video text tracks:
 ~~~~~~~~~~~~~~~~~~
 
-To enable the uploading and displaying of VTT tracks (e.g. subtitles, captions) you'll need to add ``wagtail.contrib.modeladmin`` to your installed apps.
+To enable the uploading and displaying of VTT tracks (e.g. subtitles, captions) you'll need to add ``wagtail_modeladmin`` to your installed apps.
 Once added, there will be an new area in the admin for attaching VTT files to videos with associaled metadata.
 
 Future features
