@@ -6,7 +6,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template.defaultfilters import filesizeformat
 from django.test import TestCase, override_settings
 from django.urls import reverse
-from mock import patch
+from unittest.mock import patch
 from wagtail.models import Collection, GroupCollectionPermission
 from wagtail.test.utils import WagtailTestUtils
 

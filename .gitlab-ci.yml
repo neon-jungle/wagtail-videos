@@ -14,14 +14,14 @@ head:
   extends: .python_test
   image: python:3.11
   before_script:
-    - pip install .['testing']
+    - pip install .
 
 
 lts_52:
   image: python:3.11
   extends: .python_test
   before_script:
-    - pip install .['testing'] wagtail~=5.2 django~=4.2
+    - pip install . wagtail~=5.2 django~=4.2
 
 flake8:
   stage: lint
