@@ -38,7 +38,7 @@
                   {% elif field.is_hidden %}
                     {{ field }}
                   {% else %}
-                    {% include "wagtailadmin/shared/field_as_li.html" with li_classes="label-above label-uppercase" %}
+                    <li>{% include "wagtailadmin/shared/field.html" with li_classes="label-above label-uppercase" %}</li>
                   {% endif %}
                 {% endfor %}
                 <li>
@@ -109,8 +109,8 @@
             <form action="{% url 'wagtailvideos:create_transcode' video.id %}" method="POST">
                 <ul class="fields">
                     {% csrf_token %}
-                    {% include "wagtailadmin/shared/field_as_li.html" with field=transcode_form.media_format li_classes="label-above label-uppercase" %}
-                    {% include "wagtailadmin/shared/field_as_li.html" with field=transcode_form.quality li_classes="label-above label-uppercase" %}
+                    <li>{% include "wagtailadmin/shared/field.html" with field=transcode_form.media_format li_classes="label-above label-uppercase" %}</li>
+                    <li>{% include "wagtailadmin/shared/field.html" with field=transcode_form.quality li_classes="label-above label-uppercase" %}</li>
                     <li>
                         <input class="button" type="submit" value="{% trans 'Start' %}" />
                     </li>
