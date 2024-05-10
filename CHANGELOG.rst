@@ -1,8 +1,9 @@
 CHANGELOG
 =========
 
-Unreleased
----
+6.0.0
+-----
+
 - Changed wagtail.contrib.modeladmin to wagtail_modeladmin
 - Removed references to wagtailadmin/shared/field_as_li.html
 - Removed "created in" from wagtail admin
