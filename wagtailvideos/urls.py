@@ -6,6 +6,7 @@ app_name = 'wagtailvideos'
 
 urlpatterns = [
     path('add/', videos.add, name='add'),
+    path('create_upload/', videos.create_upload, name='create_upload'),
     re_path(r'^usage/(\d+)/$', videos.usage, name='video_usage'),
 
     path('multiple/add/', multiple.add, name='add_multiple'),

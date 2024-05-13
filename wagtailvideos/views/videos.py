@@ -197,6 +197,43 @@ def add(request):
         'form': form,
     })
 
+@permission_checker.require('add')
+def create_upload(request):
+    """
+    This method creates a new video object in the storages.
+
+    It takes the file name and returns the signed upload URL.
+    """
+    pass
+    # Video = get_video_model()
+    # VideoForm = get_video_form(Video)
+    #
+    # if request.POST:
+    #     video = Video(uploaded_by_user=request.user)
+    #     form = VideoForm(request.POST, request.FILES, instance=video, user=request.user)
+    #     if form.is_valid():
+    #         # Save
+    #         video = form.save(commit=False)
+    #         video.file_size = video.file.size
+    #         video.save()
+    #
+    #         # Success! Send back an edit form
+    #         for backend in get_search_backends():
+    #             backend.add(video)
+    #
+    #         messages.success(request, _("Video '{0}' added.").format(video.title), buttons=[
+    #             messages.button(reverse('wagtailvideos:edit', args=(video.id,)), _('Edit'))
+    #         ])
+    #         return redirect('wagtailvideos:index')
+    #     else:
+    #         messages.error(request, _("The video could not be created due to errors."))
+    # else:
+    #     form = VideoForm(user=request.user)
+    #
+    # return render(request, "wagtailvideos/videos/add.html", {
+    #     'form': form,
+    # })
+
 
 def usage(request, video_id):
     video = get_object_or_404(get_video_model(), id=video_id)
