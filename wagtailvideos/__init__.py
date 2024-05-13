@@ -6,7 +6,7 @@ default_app_config = 'wagtailvideos.apps.WagtailVideosApp'
 
 def is_modeladmin_installed():
     from django.apps import apps
-    return apps.is_installed('wagtail.contrib.modeladmin')
+    return apps.is_installed('wagtail_modeladmin')
 
 
 def get_video_model_string():

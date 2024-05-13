@@ -10,7 +10,7 @@ from setuptools import find_packages, setup  # noqa: E4
 
 setup(
     name="wagtailvideos",
-    version="5.2.1",
+    version="6.0.0",
     description="A wagtail module for uploading and displaying videos in various codecs.",
     long_description=readme,
     author="Neon Jungle",
@@ -21,8 +21,8 @@ setup(
         "Django>=3.2",
         "django-enumchoicefield>=1.1.0",
         "bcp47==0.0.4",
+        "wagtail-modeladmin>=2.0.0"
     ],
-    extras_require={"testing": ["mock==2.0.0"]},
     zip_safe=False,
     license="BSD License",
     packages=find_packages(),
