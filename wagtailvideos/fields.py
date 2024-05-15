@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 class WagtailVideoField(FileField):
     def __init__(self, *args, **kwargs):
-        super(WagtailVideoField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Get max upload size from settings
         self.max_upload_size = getattr(settings, 'WAGTAILVIDEOS_MAX_UPLOAD_SIZE', 1024 * 1024 * 1024)
@@ -50,7 +50,7 @@ class WagtailVideoField(FileField):
             ), code='file_too_large')
 
     def to_python(self, data):
-        f = super(WagtailVideoField, self).to_python(data)
+        f = super().to_python(data)
 
         if f is not None:
             self.check_video_file_size(f)

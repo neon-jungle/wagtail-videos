@@ -17,7 +17,7 @@ def video(video, **attrs):
 class WagtailVideosExtension(Extension):
 
     def __init__(self, environment):
-        super(WagtailVideosExtension, self).__init__(environment)
+        super().__init__(environment)
 
         self.environment.globals.update({
             'video': video,

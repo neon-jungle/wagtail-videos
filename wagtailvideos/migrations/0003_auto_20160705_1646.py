@@ -3,7 +3,6 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import django.db.models.deletion
-import enumchoicefield.fields
 from django.db import migrations, models
 
 import wagtailvideos.models
@@ -20,7 +19,14 @@ class Migration(migrations.Migration):
             name='VideoTranscode',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('media_format', enumchoicefield.fields.EnumChoiceField(enum_class=wagtailvideos.models.MediaFormats, max_length=4)),
+                ('media_format', models.CharField(
+                    choices=[
+                        ("webm", "VP8 and Vorbis in WebM"),
+                        ("mp4", "H.264 and AAC in Mp4"),
+                        ("ogg", "Theora and Vorbis in Ogg"),
+                    ],
+                    max_length=4,
+                )),
                 ('processing', models.BooleanField(default=False)),
                 ('file', models.FileField(null=True, upload_to=wagtailvideos.models.get_upload_to, verbose_name='file')),
                 ('video', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='transcodes', to='wagtailvideos.Video')),

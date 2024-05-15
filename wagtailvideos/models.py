@@ -16,7 +16,6 @@ from django.forms.utils import flatatt
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from enumchoicefield import ChoiceEnum, EnumChoiceField
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from taggit.managers import TaggableManager
@@ -25,39 +24,19 @@ from wagtail.models import CollectionMember, Orderable
 from wagtail.search import index
 from wagtail.search.queryset import SearchableQuerySetMixin
 
+from wagtailvideos.enums import MediaFormats, VideoQuality, VideoTrackKind
+
 logger = logging.getLogger(__name__)
 
 
-class VideoQuality(ChoiceEnum):
-    default = 'Default'
-    lowest = 'Low'
-    highest = 'High'
-
-
-class MediaFormats(ChoiceEnum):
-    webm = 'VP8 and Vorbis in WebM'
-    mp4 = 'H.264 and AAC in Mp4'
-    ogg = 'Theora and Vorbis in Ogg'
-
-    def get_quality_param(self, quality):
-        if self is MediaFormats.webm:
-            return {
-                VideoQuality.lowest: '50',
-                VideoQuality.default: '22',
-                VideoQuality.highest: '4'
-            }[quality]
-        elif self is MediaFormats.mp4:
-            return {
-                VideoQuality.lowest: '28',
-                VideoQuality.default: '24',
-                VideoQuality.highest: '18'
-            }[quality]
-        elif self is MediaFormats.ogg:
-            return {
-                VideoQuality.lowest: '5',
-                VideoQuality.default: '7',
-                VideoQuality.highest: '9'
-            }[quality]
+def _choices(text_choices, max_length=None):
+    """Return a kwargs dict for adding choices and max_length to a CharField"""
+    if max_length is None:
+        max_length = max([len(choice) for choice in text_choices.values])
+    return {
+        "choices": text_choices.choices,
+        "max_length": max_length,
+    }
 
 
 class VideoQuerySet(SearchableQuerySetMixin, models.QuerySet):
@@ -96,7 +75,7 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
     ]
 
     def __init__(self, *args, **kwargs):
-        super(AbstractVideo, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._initial_file = self.file
 
     def get_file_size(self):
@@ -144,9 +123,6 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
 
     def __str__(self):
         return self.title
-
-    def save(self, **kwargs):
-        super(AbstractVideo, self).save(**kwargs)
 
     @property
     def url(self):
@@ -246,7 +222,7 @@ class Video(AbstractVideo):
 
 class TranscodingThread(threading.Thread):
     def __init__(self, transcode, **kwargs):
-        super(TranscodingThread, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.transcode = transcode
 
     def get_file_url(self, file):
@@ -289,7 +265,7 @@ class TranscodingThread(threading.Thread):
         quality_param = media_format.get_quality_param(self.transcode.quality)
         args = ['ffmpeg', '-hide_banner', '-i', input_file]
         try:
-            if media_format is MediaFormats.ogg:
+            if media_format is MediaFormats.OGG:
                 subprocess.check_output(args + [
                     '-codec:v', 'libtheora',
                     '-qscale:v', quality_param,
@@ -297,7 +273,7 @@ class TranscodingThread(threading.Thread):
                     '-qscale:a', '5',
                     output_file,
                 ], stdin=FNULL, stderr=subprocess.STDOUT)
-            elif media_format is MediaFormats.mp4:
+            elif media_format is MediaFormats.MP4:
                 subprocess.check_output(args + [
                     '-codec:v', 'libx264',
                     '-preset', 'slow',  # TODO Checkout other presets
@@ -305,7 +281,7 @@ class TranscodingThread(threading.Thread):
                     '-codec:a', 'aac',
                     output_file,
                 ], stdin=FNULL, stderr=subprocess.STDOUT)
-            elif media_format is MediaFormats.webm:
+            elif media_format is MediaFormats.WEBM:
                 subprocess.check_output(args + [
                     '-codec:v', 'libvpx',
                     '-crf', quality_param,
@@ -325,8 +301,8 @@ class TranscodingThread(threading.Thread):
 
 
 class AbstractVideoTranscode(models.Model):
-    media_format = EnumChoiceField(MediaFormats)
-    quality = EnumChoiceField(VideoQuality, default=VideoQuality.default)
+    media_format = models.CharField(**_choices(MediaFormats))
+    quality = models.CharField(**_choices(VideoQuality), default=VideoQuality.DEFAULT)
     processing = models.BooleanField(default=False)
     file = models.FileField(null=True, blank=True, verbose_name=_('file'),
                             upload_to=get_upload_to)
@@ -371,20 +347,11 @@ class TrackListing(AbstractTrackListing):
 
 
 class AbstractVideoTrack(Orderable):
-    # TODO move to TextChoices once django < 3 is dropped
-    track_kinds = [
-        ('subtitles', _('Subtitles')),
-        ('captions', _('Captions')),
-        ('descriptions', _('Descriptions')),
-        ('chapters', _('Chapters')),
-        ('metadata', _('Metadata')),
-    ]
-
     file = models.FileField(
         verbose_name=_('File'),
         upload_to=get_upload_to
     )
-    kind = models.CharField(max_length=50, choices=track_kinds, default=track_kinds[0][0], verbose_name=_('Kind'))
+    kind = models.CharField(**_choices(VideoTrackKind, max_length=50), default=VideoTrackKind.SUBTITLES, verbose_name=_('Kind'))
     label = models.CharField(
         max_length=255, blank=True,
         help_text=_('A user-readable title of the text track.'),
