@@ -12,8 +12,8 @@ html5 compliant codec using ffmpeg.
 Requirements
 ------------
 
--  Wagtail >= 4.0 (for older wagtail version see the tags)
--  `ffmpeg <https://ffmpeg.org/>`__
+-  Wagtail >= 5.2 (for older wagtail version see the tags)
+-  `ffmpeg <https://ffmpeg.org/>`__ (optional, for transcoding)
 
 Installing
 ----------
