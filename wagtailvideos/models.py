@@ -2,15 +2,10 @@ import logging
 import mimetypes
 import os
 import os.path
-import shutil
-import subprocess
-import tempfile
-import threading
 
 import bcp47
 from django.conf import settings
 from django.core.exceptions import SuspiciousFileOperation
-from django.core.files.base import ContentFile
 from django.db import models
 from django.forms.utils import flatatt
 from django.urls import reverse
@@ -24,7 +19,8 @@ from wagtail.models import CollectionMember, Orderable
 from wagtail.search import index
 from wagtail.search.queryset import SearchableQuerySetMixin
 
-from wagtailvideos.enums import MediaFormats, VideoQuality, VideoTrackKind
+from . import get_transcoder_backend
+from .enums import MediaFormats, VideoQuality, VideoTrackKind
 
 logger = logging.getLogger(__name__)
 
@@ -196,7 +192,9 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
             # Lock the transcode model
             transcode.save(update_fields=['processing', 'error_message',
                                           'quality'])
-            TranscodingThread(transcode).start()
+            # Generate the transcode using the selected transcoding backend
+            backend = get_transcoder_backend()
+            backend.do_transcode(transcode)
         else:
             pass  # TODO Queue?
 
@@ -218,86 +216,6 @@ class Video(AbstractVideo):
         permissions = [
             ("choose_video", "Can choose video"),
         ]
-
-
-class TranscodingThread(threading.Thread):
-    def __init__(self, transcode, **kwargs):
-        super().__init__(**kwargs)
-        self.transcode = transcode
-
-    def get_file_url(self, file):
-        input_file = None
-
-        # Check if it is a local file
-        try:
-            input_file = file.path
-        except NotImplementedError:
-            input_file = None
-
-        if input_file:
-            return input_file
-
-        # Check if it is a file stored with django-storages
-        try:
-            input_file = file.url
-        except NotImplementedError:
-            input_file = None
-
-        return input_file
-
-    def run(self):
-        video = self.transcode.video
-        media_format = self.transcode.media_format
-        input_file = self.get_file_url(video.file)
-
-        if not input_file:
-            raise ValueError(
-                "Invalid input_file value {0} for file {1}".format(input_file, video.file)
-            )
-
-        output_dir = tempfile.mkdtemp()
-        transcode_name = "{0}.{1}".format(
-            video.filename(include_ext=False),
-            media_format.name)
-
-        output_file = os.path.join(output_dir, transcode_name)
-        FNULL = open(os.devnull, 'r')
-        quality_param = media_format.get_quality_param(self.transcode.quality)
-        args = ['ffmpeg', '-hide_banner', '-i', input_file]
-        try:
-            if media_format is MediaFormats.OGG:
-                subprocess.check_output(args + [
-                    '-codec:v', 'libtheora',
-                    '-qscale:v', quality_param,
-                    '-codec:a', 'libvorbis',
-                    '-qscale:a', '5',
-                    output_file,
-                ], stdin=FNULL, stderr=subprocess.STDOUT)
-            elif media_format is MediaFormats.MP4:
-                subprocess.check_output(args + [
-                    '-codec:v', 'libx264',
-                    '-preset', 'slow',  # TODO Checkout other presets
-                    '-crf', quality_param,
-                    '-codec:a', 'aac',
-                    output_file,
-                ], stdin=FNULL, stderr=subprocess.STDOUT)
-            elif media_format is MediaFormats.WEBM:
-                subprocess.check_output(args + [
-                    '-codec:v', 'libvpx',
-                    '-crf', quality_param,
-                    '-codec:a', 'libvorbis',
-                    output_file,
-                ], stdin=FNULL, stderr=subprocess.STDOUT)
-            self.transcode.file = ContentFile(
-                open(output_file, 'rb').read(), transcode_name)
-            self.transcode.error_message = ''
-        except subprocess.CalledProcessError as error:
-            self.transcode.error_message = error.output
-
-        finally:
-            self.transcode.processing = False
-            self.transcode.save()
-            shutil.rmtree(output_dir, ignore_errors=True)
 
 
 class AbstractVideoTranscode(models.Model):

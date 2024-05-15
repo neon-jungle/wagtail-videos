@@ -13,7 +13,8 @@ from wagtail.models import Collection
 from wagtail.search.backends import get_search_backends
 from wagtail_modeladmin.helpers import AdminURLHelper
 
-from wagtailvideos import ffmpeg, get_video_model, is_modeladmin_installed
+from wagtailvideos import (
+    get_transcoder_backend, get_video_model, is_modeladmin_installed)
 from wagtailvideos.forms import VideoTranscodeAdminForm, get_video_form
 from wagtailvideos.permissions import permission_policy
 
@@ -133,7 +134,8 @@ def edit(request, video_id):
         'video': video,
         'form': form,
         'filesize': video.get_file_size(),
-        'can_transcode': ffmpeg.installed() and not getattr(settings, 'WAGTAIL_VIDEOS_DISABLE_TRANSCODE', False),
+        'transcoder_installed': get_transcoder_backend().installed(),
+        'transcoder_enabled': not getattr(settings, 'WAGTAIL_VIDEOS_DISABLE_TRANSCODE', False),
         'transcodes': video.transcodes.all(),
         'transcode_form': VideoTranscodeAdminForm(video=video),
         'tracks_action_url': action_url,

@@ -5,7 +5,7 @@ from django.core.files.temp import NamedTemporaryFile
 from django.db import transaction
 from django.db.models.signals import post_delete, post_save
 
-from wagtailvideos import ffmpeg, get_video_model
+from wagtailvideos import get_transcoder_backend, get_video_model
 
 
 @contextmanager
@@ -39,25 +39,15 @@ def post_delete_file_cleanup(instance, **kwargs):
         transaction.on_commit(lambda: instance.thumbnail.delete(False))
 
 
-# Fields that need the actual video file to create using ffmpeg
+# Fields that need the actual video file to create using the transcoding backend.
 def video_post_save(instance, **kwargs):
-    if not ffmpeg.installed():
+    backend = get_transcoder_backend()
+    if not backend.installed():
         return
-
     if hasattr(instance, '_from_signal'):
         # Sender was us, don't run post save
         return
-
-    has_changed = instance._initial_file is not instance.file
-    filled_out = instance.thumbnail is not None and instance.duration is not None
-    if has_changed or not filled_out:
-        with get_local_file(instance.file) as file_path:
-            if has_changed or instance.thumbnail is None:
-                instance.thumbnail = ffmpeg.get_thumbnail(file_path)
-
-            if has_changed or instance.duration is None:
-                instance.duration = ffmpeg.get_duration(file_path)
-
+    backend.update_video_metadata(instance)
     instance.file_size = instance.file.size
     instance._from_signal = True
     instance.save()

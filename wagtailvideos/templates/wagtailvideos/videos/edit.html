@@ -75,7 +75,6 @@
             </div>
         </div>
         <div class="row" style="margin-top: 2em;">
-        {% if can_transcode %}
             <h2 class="u-text-transform-uppercase">{% trans "Transcodes" %}</h2>
             <p>{% trans "If you wish to generate HTML5 compliant transcodes use the form below. This may take a while depending on the length of the video." %}</p>
             {% if transcodes %}
@@ -106,6 +105,7 @@
             </ul>
             {% endif %}
             <h3 class="u-text-transform-uppercase">{% trans "Create transcode" %}</h3>
+        {% if transcoder_installed and transcoder_enabled %}
             <form action="{% url 'wagtailvideos:create_transcode' video.id %}" method="POST">
                 <ul class="fields">
                     {% csrf_token %}
@@ -116,9 +116,15 @@
                     </li>
                 </ul>
             </form>
+        {% elif transcoder_installed and not transcoder_enabled %}
+            <br/><br/>
+            <span class="transcode-error">{% trans "Transcoding is disabled." %}</span>
+        {% elif not transcoder_installed and transcoder_enabled %}
+            <br/><br/>
+            <span class="transcode-error">{% trans "The selected transcoding backend is not installed on your server." %}</span>
         {% else %}
             <br/><br/>
-            <span class="transcode-error">{% trans "Ffmpeg is not found on your server or you have disabled transcodes. Please install Ffmepg and make sure that transcoding is enabled if you wish to transcode videos into an HTML5 video compliant format." %}</span>
+            <span class="transcode-error">{% trans "The selected transcoding backend is not installed on your server and you have disabled transcodes. Please install the backend requirements and enable transcoding if you wish to transcode videos into an HTML5 video compliant format." %}</span>
         {% endif %}
         {% if tracks_action_url %}
             <h2 class="u-text-transform-uppercase">{% trans "Tracks" %}</h2>
