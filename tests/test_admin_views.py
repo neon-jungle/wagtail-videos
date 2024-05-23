@@ -112,7 +112,7 @@ class TestVideoAddView(TestCase, WagtailTestUtils):
         root_collection = Collection.get_first_root_node()
         self.assertEqual(video.collection, root_collection)
 
-    @patch("wagtailvideos.ffmpeg.installed")
+    @patch("wagtailvideos.transcoders.ffmpeg.ffmpeg.installed")
     def test_add_no_ffmpeg(self, ffmpeg_installed):
         ffmpeg_installed.return_value = False
 
