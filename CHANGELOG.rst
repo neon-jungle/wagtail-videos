@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+6.1.0
+-----
+
+- Groundwork for pluggable backends added
+- Video width/height now stored against the video model
+- Removed enumchoicefield as a requirement (rip)
+
 6.0.0
 -----
 
