@@ -23,14 +23,22 @@ class FFmpegBackend(BaseBackend):
 
     def update_video_metadata(self, video) -> None:
         has_changed = video._initial_file is not video.file
-        filled_out = video.thumbnail is not None and video.duration is not None
+        meta_fields = ["thumbnail", "duration", "width", "height"]
+        filled_out = all(
+            (getattr(video, field) is not None)
+            for field in meta_fields
+        )
         if not has_changed and filled_out:
             return
         with self._get_local_file(video.file) as file_path:
-            if has_changed or not video.thumbnail:
-                video.thumbnail = ffmpeg.get_thumbnail(file_path)
-            if has_changed or video.duration is None:
-                video.duration = ffmpeg.get_duration(file_path)
+            stats = ffmpeg.get_stats(file_path)
+            for field in meta_fields:
+                if has_changed or not getattr(video, field):
+                    if field == "thumbnail":
+                        video.thumbnail = ffmpeg.get_thumbnail(file_path)
+                    elif stats:
+                        value = stats.get(field)
+                        setattr(video, field, value)
 
     def do_transcode(self, transcode):
         if self.blocking:

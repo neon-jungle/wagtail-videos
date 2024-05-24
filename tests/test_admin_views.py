@@ -107,6 +107,8 @@ class TestVideoAddView(TestCase, WagtailTestUtils):
         self.assertTrue(video.thumbnail)
         self.assertTrue(video.duration)
         self.assertTrue(video.file_size)
+        self.assertTrue(video.width)
+        self.assertTrue(video.height)
 
         # Test that it was placed in the root collection
         root_collection = Collection.get_first_root_node()
@@ -136,6 +138,8 @@ class TestVideoAddView(TestCase, WagtailTestUtils):
 
         self.assertFalse(video.thumbnail)
         self.assertFalse(video.duration)
+        self.assertFalse(video.width)
+        self.assertFalse(video.height)
 
     def test_add_no_file_selected(self):
         response = self.post(

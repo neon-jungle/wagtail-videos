@@ -59,6 +59,8 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
     tags = TaggableManager(help_text=None, blank=True, verbose_name=_('tags'))
 
     file_size = models.PositiveIntegerField(null=True, editable=False)
+    width = models.IntegerField(verbose_name=_("width"), editable=False, null=True)
+    height = models.IntegerField(verbose_name=_("height"), editable=False, null=True)
 
     objects = VideoQuerySet.as_manager()
 

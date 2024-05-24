@@ -2,11 +2,11 @@ import datetime
 import logging
 import os
 import os.path
-import re
 import shutil
 import subprocess
 import tempfile
-from typing import List, Optional
+import json
+from typing import List, Optional, TypedDict
 
 from django.conf import settings
 from django.core.files.base import ContentFile
@@ -16,51 +16,85 @@ from wagtailvideos.enums import MediaFormats, VideoQuality
 logger = logging.getLogger(__name__)
 
 
+class VideoStats(TypedDict):
+    width: int
+    height: int
+    duration: datetime.timedelta
+
+
 def installed(path: Optional[str] = None) -> bool:
     return shutil.which("ffmpeg", path=path) is not None
 
 
-def get_duration(file_path: str) -> Optional[datetime.timedelta]:
+def get_stats(file_path: str) -> Optional[VideoStats]:
     if not installed():
-        raise RuntimeError('ffmpeg is not installed')
-
-    cmd = ["ffprobe", file_path, '-show_format', '-v', 'quiet']
+        raise RuntimeError("ffmpeg is not installed")
+    cmd = [
+        "ffprobe",
+        file_path,
+        # Return output in JSON
+        "-of",
+        "json",
+        # Quiet mode
+        "-v",
+        "quiet",
+        # Ignore audio tracks
+        "-select_streams",
+        "v",
+        # Return video format info
+        "-show_format",
+        # Return video dimensions
+        "-show_entries",
+        "stream=width,height",
+    ]
     try:
         with open(os.devnull, "r+b") as fnull:
-            show_format_bytes = subprocess.check_output(
-                cmd,
-                stdin=fnull,
-                stderr=fnull,
+            resp = json.loads(
+                subprocess.check_output(
+                    cmd,
+                    stdin=fnull,
+                    stderr=fnull,
+                )
             )
     except subprocess.CalledProcessError:
         logger.exception("Getting video duration failed")
         return None
-    show_format = show_format_bytes.decode("utf-8")
-    # show_format comes out in key=value pairs seperated by newlines
-    duration = re.findall(r'([duration^=]+)=([^=]+)(?:\n|$)', show_format)[0][1]
-    return datetime.timedelta(seconds=float(duration))
+    stream = resp["streams"][0]
+    return VideoStats(
+        width=int(stream["width"]),
+        height=int(stream["height"]),
+        duration=datetime.timedelta(seconds=float(resp["format"]["duration"])),
+    )
 
 
 def get_thumbnail(file_path: str) -> Optional[ContentFile]:
     if not installed():
-        raise RuntimeError('ffmpeg is not installed')
+        raise RuntimeError("ffmpeg is not installed")
 
     file_name = os.path.basename(file_path)
-    thumb_extension = getattr(settings, 'WAGTAIL_VIDEOS_THUMBNAIL_EXTENSION', 'jpg').lower()
-    thumb_name = '{}_thumb.{}'.format(os.path.splitext(file_name)[0], thumb_extension)
+    thumb_extension = getattr(
+        settings, "WAGTAIL_VIDEOS_THUMBNAIL_EXTENSION", "jpg"
+    ).lower()
+    thumb_name = "{}_thumb.{}".format(os.path.splitext(file_name)[0], thumb_extension)
 
     try:
         output_dir = tempfile.mkdtemp()
         output_file = os.path.join(output_dir, thumb_name)
         cmd = [
-            'ffmpeg',
-            '-v', 'quiet',
-            '-itsoffset', '-4',
-            '-i', file_path,
-            '-update', 'true',
-            '-vframes', '1',
-            '-an',
-            '-vf', 'scale=iw:-1',  # Make thumbnail the size & aspect ratio of the input video
+            "ffmpeg",
+            "-v",
+            "quiet",
+            "-itsoffset",
+            "-4",
+            "-i",
+            file_path,
+            "-update",
+            "true",
+            "-vframes",
+            "1",
+            "-an",
+            "-vf",
+            "scale=iw:-1",  # Make thumbnail the size & aspect ratio of the input video
             output_file,
         ]
         try:
@@ -72,7 +106,7 @@ def get_thumbnail(file_path: str) -> Optional[ContentFile]:
                 )
         except subprocess.CalledProcessError:
             return None
-        return ContentFile(open(output_file, 'rb').read(), thumb_name)
+        return ContentFile(open(output_file, "rb").read(), thumb_name)
     finally:
         shutil.rmtree(output_dir, ignore_errors=True)
 
@@ -98,7 +132,9 @@ class FFmpegTranscoder:
         )
 
         output_file = os.path.join(output_dir, transcode_name)
-        ffmpeg_cmd = self._get_ffmpeg_command(input_file, output_file, media_format, self.transcode.quality)
+        ffmpeg_cmd = self._get_ffmpeg_command(
+            input_file, output_file, media_format, self.transcode.quality
+        )
         try:
             with open(os.devnull, "r") as fnull:
                 subprocess.check_output(
@@ -179,22 +215,24 @@ class FFmpegTranscoder:
                 output_file,
             ]
 
-    def _get_quality_param(self, media_format: MediaFormats, quality: VideoQuality) -> str:
+    def _get_quality_param(
+        self, media_format: MediaFormats, quality: VideoQuality
+    ) -> str:
         if media_format is MediaFormats.WEBM:
             return {
-                VideoQuality.LOWEST: '50',
-                VideoQuality.DEFAULT: '22',
-                VideoQuality.HIGHEST: '4'
+                VideoQuality.LOWEST: "50",
+                VideoQuality.DEFAULT: "22",
+                VideoQuality.HIGHEST: "4",
             }[quality]
         elif media_format is MediaFormats.MP4:
             return {
-                VideoQuality.LOWEST: '28',
-                VideoQuality.DEFAULT: '24',
-                VideoQuality.HIGHEST: '18'
+                VideoQuality.LOWEST: "28",
+                VideoQuality.DEFAULT: "24",
+                VideoQuality.HIGHEST: "18",
             }[quality]
         elif media_format is MediaFormats.OGG:
             return {
-                VideoQuality.LOWEST: '5',
-                VideoQuality.DEFAULT: '7',
-                VideoQuality.HIGHEST: '9'
+                VideoQuality.LOWEST: "5",
+                VideoQuality.DEFAULT: "7",
+                VideoQuality.HIGHEST: "9",
             }[quality]
