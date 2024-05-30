@@ -173,7 +173,7 @@ class AbstractVideo(CollectionMember, index.Indexed, models.Model):
         transcodes = self.get_current_transcodes()
         sources = []
         for transcode in transcodes:
-            sources.append("<source src='{0}' type='video/{1}' >".format(transcode.url, transcode.media_format.name))
+            sources.append("<source src='{0}' type='video/{1}' >".format(transcode.url, transcode.media_format))
 
         sources.append("<source src='{0}' type='{1}'>"
                        .format(self.url, self.content_type))
