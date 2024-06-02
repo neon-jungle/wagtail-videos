@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+6.1.1
+-----
+
+- Fixed attribute error in admin
+
 6.1.0
 -----
 
