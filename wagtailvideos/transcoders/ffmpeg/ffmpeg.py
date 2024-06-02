@@ -128,7 +128,7 @@ class FFmpegTranscoder:
 
         output_dir = tempfile.mkdtemp()
         transcode_name = "{0}.{1}".format(
-            video.filename(include_ext=False), media_format.name
+            video.filename(include_ext=False), media_format
         )
 
         output_file = os.path.join(output_dir, transcode_name)
