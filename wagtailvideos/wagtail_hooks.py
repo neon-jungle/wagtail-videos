@@ -53,7 +53,12 @@ def editor_js():
     return format_html(
         """
         <script>
+        if (window.chooserUrls) {{
             window.chooserUrls.videoChooser = '{0}';
+        }} else {{
+            window.chooserUrls = new Object();
+            window.chooserUrls.videoChooser = '{0}';
+        }}
         </script>
         """,
         reverse('wagtailvideos_chooser:choose')
