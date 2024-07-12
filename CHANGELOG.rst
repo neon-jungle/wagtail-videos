@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+6.1.2
+-----
+
+- Temporary fix for wt 6+
+
+
 6.1.1
 -----
 
