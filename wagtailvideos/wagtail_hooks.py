@@ -48,23 +48,6 @@ def register_admin_urls():
     ]
 
 
-@hooks.register('insert_editor_js')
-def editor_js():
-    return format_html(
-        """
-        <script>
-        if (window.chooserUrls) {{
-            window.chooserUrls.videoChooser = '{0}';
-        }} else {{
-            window.chooserUrls = new Object();
-            window.chooserUrls.videoChooser = '{0}';
-        }}
-        </script>
-        """,
-        reverse('wagtailvideos_chooser:choose')
-    )
-
-
 @hooks.register('register_group_permission_panel')
 def register_video_permissions_panel():
     return GroupVideoPermissionFormSet
