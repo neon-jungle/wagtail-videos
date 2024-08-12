@@ -49,7 +49,7 @@ class IndexView(generic.IndexView):
         return self.breadcrumbs_items + [
             {"url": "", "label": "Videos"},
         ]
-    
+
     def get_filterset_kwargs(self):
         kwargs = super().get_filterset_kwargs()
         kwargs["is_searching"] = self.is_searching
