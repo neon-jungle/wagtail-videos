@@ -6,7 +6,6 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.vary import vary_on_headers
 from wagtail.admin.auth import PermissionPolicyChecker
 from wagtail.search.backends import get_search_backends
-
 from wagtailvideos import get_video_model
 from wagtailvideos.forms import get_video_form
 from wagtailvideos.permissions import permission_policy
@@ -30,6 +29,7 @@ def get_video_edit_form(VideoModel):
 
 @vary_on_headers('X-Requested-With')
 def add(request):
+    # TODO replace with wagtail.admin.views.generic.multiple_upload.AddView subclass
     Video = get_video_model()
     VideoForm = get_video_form(Video)
 

@@ -1,43 +1,11 @@
-{% extends "wagtailadmin/base.html" %}
+{% extends "wagtailadmin/generic/index.html" %}
 {% load i18n %}
 
 {% block titletag %}{% trans "Videos" %}{% endblock %}
-{% block extra_js %}
-    {{ block.super }}
-    <script>
-        window.headerSearch = {
-            url: "{% url 'wagtailvideos:index' %}",
-            termInput: "#id_q",
-            targetOutput: "#image-results"
-        }
 
-        $(function() {
-            $('#collection_chooser_collection_id').change(function() {
-                this.form.submit();
-            })
-        });
-    </script>
-{% endblock %}
 
-{% block content %}
-    {% trans "Videos" as video_str %}
+{% block slim_header %}
 
-    {% trans "Add a video" as add_video_str %}
-    {% url "wagtailvideos:add_multiple" as add_link %}
-    {% include "wagtailadmin/shared/header.html" with title=video_str add_link="wagtailvideos:add_multiple" action_url=add_link icon="media" add_text=add_video_str action_text=add_video_str search_url="wagtailvideos:index" %}
-
-    <div class="nice-padding">
-        {% if collections %}
-            <form class="image-search search-bar" action="{% url 'wagtailvideos:index' %}" method="GET">
-                <ul class="fields">
-                    {% include "wagtailadmin/shared/collection_chooser.html" %}
-                </ul>
-            </form>
-        {% endif %}
-
-        <div id="image-results">
-            {% include "wagtailvideos/videos/results.html" %}
-        </div>
-    </div>
-
+{% trans "Add a video" as add_video_str %}
+	{% include "wagtailadmin/shared/headers/slim_header.html" with title=video_str breadcrumbs_items=breadcrumbs_items icon_name="media" search_url=index_results_url search_form=search_form filters=filters  buttons=header_buttons only %}
 {% endblock %}

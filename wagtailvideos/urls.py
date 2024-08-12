@@ -15,5 +15,6 @@ urlpatterns = [
     re_path(r'^(\d+)/delete/$', videos.delete, name='delete'),
     re_path(r'^(\d+)/create_transcode/$', videos.create_transcode, name='create_transcode'),
     re_path(r'^(\d+)/$', videos.edit, name='edit'),
-    path('', videos.index, name='index'),
+    path('', videos.IndexView.as_view(), name='index'),
+    path("results/", videos.IndexView.as_view(results_only=True), name="index_results"),
 ]

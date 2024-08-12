@@ -187,3 +187,4 @@ Future features
 -  Some docs
 -  Richtext embed
 -  Transcoding via external service rather than ffmpeg
+-  Remove wagtail-modeladmin dependency
