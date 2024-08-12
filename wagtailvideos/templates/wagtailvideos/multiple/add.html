@@ -3,7 +3,7 @@
 {% block titletag %}{% trans "Add multiple videos" %}{% endblock %}
 {% block extra_css %}
     {{ block.super }}
-    
+    {{ form_media.css }}
 {% endblock %}
 
 {% block content %}
@@ -43,7 +43,7 @@
         <ul id="upload-list" class="upload-list multiple"></ul>
     </div>
 
-    <script id="upload-list-item" type="text/template">
+    <template id="upload-list-item">
         <li class="row">
             <div class="left col3">
                 <div class="preview">
@@ -59,12 +59,12 @@
                 <p class="status-msg failure error_messages"></p>
             </div>
         </li>
-    </script>
+    </template>
 {% endblock %}
 
 {% block extra_js %}
     {{ block.super }}
-
+    {{ form_media.js }}
     <!-- this exact order of plugins is vital -->
     <script src="{% versioned_static 'wagtailimages/js/vendor/load-image.min.js' %}"></script>
     <script src="{% versioned_static 'wagtailimages/js/vendor/canvas-to-blob.min.js' %}"></script>
@@ -87,9 +87,6 @@
                 max_file_size: "{{ error_max_file_size }}",
                 accepted_file_types: "{{ error_accepted_file_types }}"
             }
-        };
-        window.tagit_opts = {
-            autocomplete: {source: "{{ autocomplete_url|addslashes }}"}
         };
     </script>
 {% endblock %}
