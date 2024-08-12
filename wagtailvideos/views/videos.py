@@ -4,21 +4,16 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
-from django.views.decorators.vary import vary_on_headers
 from wagtail.admin import messages
 from wagtail.admin.auth import PermissionPolicyChecker
-from wagtail.admin.forms.search import SearchForm
-from wagtail.admin.models import popular_tags_for_model
-from wagtail.models import Collection
+from wagtail.admin.filters import BaseMediaFilterSet
+from wagtail.admin.views import generic
 from wagtail.search.backends import get_search_backends
 from wagtail_modeladmin.helpers import AdminURLHelper
 
 from wagtailvideos import (
     get_transcoder_backend, get_video_model, is_modeladmin_installed)
 from wagtailvideos.forms import VideoTranscodeAdminForm, get_video_form
-from wagtailvideos.permissions import permission_policy
-from wagtail.admin.views import generic
-from wagtail.admin.filters import BaseMediaFilterSet
 from wagtailvideos.permissions import permission_policy
 
 permission_checker = PermissionPolicyChecker(permission_policy)
@@ -37,7 +32,6 @@ class VideoFilterSet(BaseMediaFilterSet):
 
 class IndexView(generic.IndexView):
     context_object_name = "videos"
-    # permission_policy = TODO 
     model = Video
     filterset_class = VideoFilterSet
     permission_policy = permission_policy
@@ -62,7 +56,8 @@ class IndexView(generic.IndexView):
         return kwargs
 
     def get_paginate_by(self, queryset):
-        return 32 # 4 x 8
+        return 32  # 4 x 8
+
 
 @permission_checker.require('change')
 def edit(request, video_id):
