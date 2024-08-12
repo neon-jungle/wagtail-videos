@@ -1,20 +1,10 @@
+
+{% extends "wagtailadmin/generic/index_results.html" %}
 {% load wagtailadmin_tags %}
 {% load i18n %}
-{% if videos %}
-    {% if is_searching %}
-        <h2>
-        {% blocktrans count counter=videos.paginator.count %}
-            There is one match
-        {% plural %}
-            There are {{ counter }} matches
-        {% endblocktrans %}
-        </h2>
 
-        {% search_other %}
-    {% else %}
-        <h2>{% trans "Latest videos" %}</h2>
-    {% endif %}
-
+{% block results %}
+<div class="nice-padding">
     <ul class="listing horiz images">
         {% for video in videos %}
             <li>
@@ -31,13 +21,13 @@
             </li>
         {% endfor %}
     </ul>
+</div>
+{% endblock %}
+    
 
-    {% include "wagtailadmin/shared/pagination_nav.html" with items=videos is_searching=is_searching query_string=query_string linkurl="wagtailvideos:index" %}
-
-{% else %}
+{% block no_results_message %}
     {% if is_searching %}
         <h2>{% blocktrans %}Sorry, no videos match "<em>{{ query_string }}</em>"{% endblocktrans %}</h2>
-
         {% search_other %}
     {% else %}
         {% url 'wagtailvideos:add_multiple' as wagtailvideos_add_video_url %}
@@ -47,4 +37,4 @@
             <p>{% blocktrans %}You've not uploaded any videos. Why not <a href="{{ wagtailvideos_add_video_url }}">add one now</a>?{% endblocktrans %}</p>
         {% endif %}
     {% endif %}
-{% endif %}
+{% endblock %}

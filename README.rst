@@ -12,7 +12,7 @@ html5 compliant codec using ffmpeg.
 Requirements
 ------------
 
--  Wagtail >= 5.2 (for older wagtail version see the tags)
+-  Wagtail >= 6.1 (for older wagtail version see the tags)
 -  `ffmpeg <https://ffmpeg.org/>`__ (optional, for transcoding)
 
 Installing
@@ -187,3 +187,4 @@ Future features
 -  Some docs
 -  Richtext embed
 -  Transcoding via external service rather than ffmpeg
+-  Remove wagtail-modeladmin dependency

@@ -4,12 +4,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
-from django.views.decorators.vary import vary_on_headers
 from wagtail.admin import messages
 from wagtail.admin.auth import PermissionPolicyChecker
-from wagtail.admin.forms.search import SearchForm
-from wagtail.admin.models import popular_tags_for_model
-from wagtail.models import Collection
+from wagtail.admin.filters import BaseMediaFilterSet
+from wagtail.admin.views import generic
 from wagtail.search.backends import get_search_backends
 from wagtail_modeladmin.helpers import AdminURLHelper
 
@@ -21,65 +19,44 @@ from wagtailvideos.permissions import permission_policy
 permission_checker = PermissionPolicyChecker(permission_policy)
 
 
-@permission_checker.require_any('add', 'change', 'delete', 'choose')
-@vary_on_headers('X-Requested-With')
-def index(request):
-    # Get Videos (filtered by user permission)
-    Video = get_video_model()
+Video = get_video_model()
 
-    collections = permission_policy.collections_user_has_any_permission_for(
-        request.user, ['add', 'change', 'delete', 'choose'])
-    if len(collections) > 1:
-        collections_to_choose = collections
-    else:
-        # no need to show a collections chooser
-        collections_to_choose = None
 
-    videos = Video.objects.filter(collection__in=collections)
+class VideoFilterSet(BaseMediaFilterSet):
+    permission_policy = permission_policy
 
-    # Search
-    query_string = None
-    if 'q' in request.GET:
-        form = SearchForm(request.GET, placeholder=_("Search videos"))
-        if form.is_valid():
-            query_string = form.cleaned_data['q']
+    class Meta:
+        model = Video
+        fields = []
 
-            videos = videos.search(query_string)
-    else:
-        form = SearchForm(placeholder=_("Search videos"))
 
-    # Filter by collection
-    current_collection = None
-    collection_id = request.GET.get('collection_id')
-    if collection_id:
-        try:
-            current_collection = Collection.objects.get(id=collection_id)
-            videos = videos.filter(collection=current_collection)
-        except (ValueError, Collection.DoesNotExist):
-            pass
+class IndexView(generic.IndexView):
+    context_object_name = "videos"
+    model = Video
+    filterset_class = VideoFilterSet
+    permission_policy = permission_policy
+    any_permission_required = ['add', 'change', 'delete']
+    header_icon = 'media'
+    template_name = 'wagtailvideos/videos/index.html'
+    results_template_name = 'wagtailvideos/videos/results.html'
+    _show_breadcrumbs = True
+    add_url_name = "wagtailvideos:add_multiple"
+    edit_url_name = "wagtailvideos:edit"
+    index_results_url_name = 'wagtailvideos:index_results'
+    add_item_label = "Add a video"
 
-    paginator = Paginator(videos, per_page=25)
-    page = paginator.get_page(request.GET.get('p'))
+    def get_breadcrumbs_items(self):
+        return self.breadcrumbs_items + [
+            {"url": "", "label": "Videos"},
+        ]
 
-    # Create response
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        response = render(request, 'wagtailvideos/videos/results.html', {
-            'videos': page,
-            'query_string': query_string,
-            'is_searching': bool(query_string),
-        })
-        return response
-    else:
-        response = render(request, 'wagtailvideos/videos/index.html', {
-            'videos': page,
-            'query_string': query_string,
-            'is_searching': bool(query_string),
-            'search_form': form,
-            'popular_tags': popular_tags_for_model(Video),
-            'current_collection': current_collection,
-            'collections': collections_to_choose,
-        })
-        return response
+    def get_filterset_kwargs(self):
+        kwargs = super().get_filterset_kwargs()
+        kwargs["is_searching"] = self.is_searching
+        return kwargs
+
+    def get_paginate_by(self, queryset):
+        return 32  # 4 x 8
 
 
 @permission_checker.require('change')

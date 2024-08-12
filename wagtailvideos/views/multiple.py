@@ -30,6 +30,7 @@ def get_video_edit_form(VideoModel):
 
 @vary_on_headers('X-Requested-With')
 def add(request):
+    # TODO replace with wagtail.admin.views.generic.multiple_upload.AddView subclass
     Video = get_video_model()
     VideoForm = get_video_form(Video)
 
