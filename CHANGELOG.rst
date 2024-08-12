@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+
+7.0.0
+-----
+
+- Upped minimum wagtail version to 6.1
+- Converted index view to generic wagtail index view
+- Removed hook that added window.chooserURL
+
+
 6.1.2
 -----
 
