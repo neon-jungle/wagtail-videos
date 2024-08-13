@@ -1,11 +1,17 @@
 CHANGELOG
 =========
 
+7.0.2
+-----
+
+- Fix classifier
+
+
 7.0.1
 -----
 
 - Fixed transcodes not working
-- Converted add mutliple views to use generic classes
+- Converted add multiple views to use generic classes
 - Fixed up JS errors on add multiple page
 
 

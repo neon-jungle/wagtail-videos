@@ -10,7 +10,7 @@ from setuptools import find_packages, setup  # noqa: E4
 
 setup(
     name="wagtailvideos",
-    version="7.0.1",
+    version="7.0.2",
     description="A wagtail module for uploading and displaying videos in various codecs.",
     long_description=readme,
     author="Neon Jungle",
@@ -20,7 +20,7 @@ setup(
         "wagtail>=6.1",
         "Django>=3.2",
         "bcp47==0.0.4",
-        "wagtail-modeladmin>=2.0.0"
+        "wagtail-modeladmin>=2.0.0",
     ],
     zip_safe=False,
     license="BSD License",
@@ -40,7 +40,7 @@ setup(
         "Programming Language :: Python :: 3.12",
         "Framework :: Django",
         "Framework :: Wagtail",
-        "Framework :: Wagtail :: 6"
+        "Framework :: Wagtail :: 6",
         "License :: OSI Approved :: BSD License",
     ],
 )
