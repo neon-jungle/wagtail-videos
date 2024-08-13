@@ -100,8 +100,8 @@ class EditView(BaseEditView):
 
 class DeleteView(BaseDeleteView):
     permission_policy = permission_policy
-    pk_url_kwarg = "image_id"
-    context_object_id_name = "image_id"
+    pk_url_kwarg = "video_id"
+    context_object_id_name = "video_id"
 
     def get_model(self):
         return get_video_model()
