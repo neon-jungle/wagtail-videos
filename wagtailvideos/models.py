@@ -230,7 +230,9 @@ class AbstractVideoTranscode(models.Model):
 
     @property
     def url(self):
-        return self.file.url
+        if self.file:
+            return self.file.url
+        return ''
 
     def get_upload_to(self, filename):
         folder_name = 'video_transcodes'
