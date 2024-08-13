@@ -202,7 +202,7 @@ class FFmpegTranscoder:
                 "-codec:a",
                 "aac",
                 "-vf",
-                "scale=trunc(iw/2)*2:trunc(ih/2)*2", # Fixes "width or height not divisible by 2" error
+                "scale=trunc(iw/2)*2:trunc(ih/2)*2",  # Fixes "width or height not divisible by 2" error
                 output_file,
             ]
 

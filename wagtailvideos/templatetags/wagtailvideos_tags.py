@@ -39,4 +39,5 @@ class VideoNode(template.Node):
 
 @register.filter
 def format_error_message(error_message):
+    # For outputting ffmpeg errors in the admin, just used internally
     return mark_safe(error_message.replace('\\n', '<br>'))

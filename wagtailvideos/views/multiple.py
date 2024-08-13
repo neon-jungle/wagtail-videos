@@ -2,19 +2,18 @@ import os
 
 from wagtail.admin.auth import PermissionPolicyChecker
 from wagtail.admin.views.generic.multiple_upload import AddView as BaseAddView
-from wagtail.admin.views.generic.multiple_upload import (
-    CreateFromUploadView as BaseCreateFromUploadView,
-)
-from wagtail.admin.views.generic.multiple_upload import (
-    DeleteUploadView as BaseDeleteUploadView,
-)
-from wagtail.admin.views.generic.multiple_upload import DeleteView as BaseDeleteView
-from wagtail.admin.views.generic.multiple_upload import EditView as BaseEditView
+from wagtail.admin.views.generic.multiple_upload import \
+    CreateFromUploadView as BaseCreateFromUploadView
+from wagtail.admin.views.generic.multiple_upload import \
+    DeleteUploadView as BaseDeleteUploadView
+from wagtail.admin.views.generic.multiple_upload import \
+    DeleteView as BaseDeleteView
+from wagtail.admin.views.generic.multiple_upload import \
+    EditView as BaseEditView
+
 from wagtailvideos import get_video_model
 from wagtailvideos.forms import get_video_form
 from wagtailvideos.permissions import permission_policy
-from wagtailvideos.permissions import permission_policy
-
 
 permission_checker = PermissionPolicyChecker(permission_policy)
 
@@ -36,7 +35,7 @@ class AddView(BaseAddView):
     permission_policy = permission_policy
     template_name = 'wagtailvideos/multiple/add.html'
     edit_form_template_name = 'wagtailvideos/multiple/edit_form.html'
-    
+
     edit_object_url_name = "wagtailvideos:edit_multiple"
     delete_object_url_name = "wagtailvideos:delete_multiple"
     edit_object_form_prefix = "video"
@@ -51,7 +50,7 @@ class AddView(BaseAddView):
 
     def get_model(self):
         return get_video_model()
-    
+
     def get_upload_form_class(self):
         return get_video_form(self.model)
 
@@ -106,7 +105,7 @@ class DeleteView(BaseDeleteView):
 
     def get_model(self):
         return get_video_model()
-    
+
 
 class CreateFromUploadedVideoView(BaseCreateFromUploadView):
     edit_upload_url_name = "wagtailvideos:create_multiple_from_uploaded_image"
@@ -118,10 +117,10 @@ class CreateFromUploadedVideoView(BaseCreateFromUploadView):
 
     def get_model(self):
         return get_video_model()
-    
+
     def get_edit_form_class(self):
         return get_video_edit_form(self.model)
-    
+
     def save_object(self, form):
         #  See wagtailimages.views.multiple.CreateFromUploadedImageView.save_object
         self.object.file.save(
@@ -132,8 +131,6 @@ class CreateFromUploadedVideoView(BaseCreateFromUploadView):
         self.object._set_image_file_metadata()
 
         form.save()
-
-
 
 
 class DeleteUploadView(BaseDeleteUploadView):
