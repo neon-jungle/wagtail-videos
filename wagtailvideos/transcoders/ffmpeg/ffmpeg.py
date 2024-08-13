@@ -201,6 +201,8 @@ class FFmpegTranscoder:
                 quality_param,
                 "-codec:a",
                 "aac",
+                "-vf",
+                "scale=trunc(iw/2)*2:trunc(ih/2)*2",  # Fixes "width or height not divisible by 2" error
                 output_file,
             ]
 
@@ -218,19 +220,19 @@ class FFmpegTranscoder:
     def _get_quality_param(
         self, media_format: MediaFormats, quality: VideoQuality
     ) -> str:
-        if media_format is MediaFormats.WEBM:
+        if media_format == MediaFormats.WEBM:
             return {
                 VideoQuality.LOWEST: "50",
                 VideoQuality.DEFAULT: "22",
                 VideoQuality.HIGHEST: "4",
             }[quality]
-        elif media_format is MediaFormats.MP4:
+        elif media_format == MediaFormats.MP4:
             return {
                 VideoQuality.LOWEST: "28",
                 VideoQuality.DEFAULT: "24",
                 VideoQuality.HIGHEST: "18",
             }[quality]
-        elif media_format is MediaFormats.OGG:
+        elif media_format == MediaFormats.OGG:
             return {
                 VideoQuality.LOWEST: "5",
                 VideoQuality.DEFAULT: "7",

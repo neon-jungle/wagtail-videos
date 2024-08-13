@@ -15,7 +15,6 @@ $(function() {
             maxFileSize: window.fileupload_opts.errormessages.max_file_size
         },
         add: function(e, data) {
-            $('.messages').empty();
             var $this = $(this);
             var that = $this.data('blueimp-fileupload') || $this.data('fileupload');
             var li = $($('#upload-list-item').html()).addClass('upload-uploading');
@@ -116,24 +115,32 @@ $(function() {
     // ajax-enhance forms added on done()
     $('#upload-list').on('submit', 'form', function(e) {
         var form = $(this);
+        var formData = new FormData(this);
         var itemElement = form.closest('#upload-list > li');
 
         e.preventDefault();
 
-        $.post(this.action, form.serialize(), function(data) {
+        $.ajax({
+            contentType: false,
+            data: formData,
+            processData: false,
+            type: 'POST',
+            url: this.action,
+          }).done(function (data) {
             if (data.success) {
-                var statusText = $('.status-msg.update-success').text();
-                addMessage('success', statusText);
-                itemElement.slideUp(function() {
-                    $(this).remove();
-                });
+              var text = $('.status-msg.update-success').first().text();
+              document.dispatchEvent(
+                new CustomEvent('w-messages:add', {
+                  detail: { clear: true, text, type: 'success' },
+                }),
+              );
+              itemElement.slideUp(function () {
+                $(this).remove();
+              });
             } else {
-                form.replaceWith(data.form);
-
-                // run tagit enhancement on new form
-                $('.tag_field input', form).tagit(window.tagit_opts);
+              form.replaceWith(data.form);
             }
-        });
+          });
     });
 
     $('#upload-list').on('click', '.delete', function(e) {

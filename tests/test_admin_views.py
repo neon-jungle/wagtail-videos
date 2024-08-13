@@ -567,28 +567,6 @@ class TestMultipleVideoUploader(TestCase, WagtailTestUtils):
         self.assertEqual(response_json["video_id"], response.context["video"].id)
         self.assertTrue(response_json["success"])
 
-    def test_add_post_noajax(self):
-        """
-        This tests that only AJAX requests are allowed to POST to the add view
-        """
-        response = self.client.post(reverse("wagtailvideos:add_multiple"), {})
-
-        # Check response
-        self.assertEqual(response.status_code, 400)
-
-    def test_add_post_nofile(self):
-        """
-        This tests that the add view checks for a file when a user POSTs to it
-        """
-        response = self.client.post(
-            reverse("wagtailvideos:add_multiple"),
-            {},
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
-        )
-
-        # Check response
-        self.assertEqual(response.status_code, 400)
-
     def test_add_post_badfile(self):
         """
         This tests that the add view checks for a file when a user POSTs to it
@@ -637,7 +615,6 @@ class TestMultipleVideoUploader(TestCase, WagtailTestUtils):
                 ("video-%d-title" % self.video.id): "New title!",
                 ("video-%d-tags" % self.video.id): "",
             },
-            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
 
         # Check response
@@ -651,22 +628,7 @@ class TestMultipleVideoUploader(TestCase, WagtailTestUtils):
         self.assertIn("success", response_json)
         self.assertEqual(response_json["video_id"], self.video.id)
         self.assertTrue(response_json["success"])
-
-    def test_edit_post_noajax(self):
-        """
-        This tests that a POST request to the edit view without AJAX returns a 400 response
-        """
-        # Send request
-        response = self.client.post(
-            reverse("wagtailvideos:edit_multiple", args=(self.video.id,)),
-            {
-                ("video-%d-title" % self.video.id): "New title!",
-                ("video-%d-tags" % self.video.id): "",
-            },
-        )
-
-        # Check response
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(Video.objects.get(id=self.video.id).title, "New title!")
 
     def test_edit_post_validation_error(self):
         """
@@ -686,7 +648,7 @@ class TestMultipleVideoUploader(TestCase, WagtailTestUtils):
         # Check response
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["Content-Type"], "application/json")
-        self.assertTemplateUsed(response, "wagtailvideos/multiple/edit_form.html")
+        self.assertTemplateUsed(response, "wagtailadmin/generic/multiple_upload/edit_form.html")
 
         # Check that a form error was raised
         self.assertFormError(
@@ -736,15 +698,3 @@ class TestMultipleVideoUploader(TestCase, WagtailTestUtils):
         self.assertIn("success", response_json)
         self.assertEqual(response_json["video_id"], self.video.id)
         self.assertTrue(response_json["success"])
-
-    def test_delete_post_noajax(self):
-        """
-        This tests that a POST request to the delete view without AJAX returns a 400 response
-        """
-        # Send request
-        response = self.client.post(
-            reverse("wagtailvideos:delete_multiple", args=(self.video.id,))
-        )
-
-        # Check response
-        self.assertEqual(response.status_code, 400)

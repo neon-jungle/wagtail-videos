@@ -8,20 +8,6 @@
 {{ block.super }}
 <link rel="stylesheet" href="{% static 'wagtailvideos/css/edit-video.css' %}" type="text/css" /> {% endblock %}
 
-{% block extra_js %}
-{{ block.super }}
-{% url 'wagtailadmin_tag_autocomplete' as autocomplete_url %}
-<script>
-    {{ form.media.css }}
-    $(function() {
-        $('#id_tags').tagit({
-            autocomplete: {
-                source: "{{ autocomplete_url|addslashes }}"
-            }
-        });
-    });
-</script>
-{% endblock %}
 {% block content %}
 {% trans "Editing" as editing_str %}
 
@@ -95,9 +81,10 @@
                         <span class="processing">{% trans "(Processing... hold tight)" %} </span>
                     {% endif %}
                     {% if transcode.error_message %}
+                        <br/>
                         <span class="transcode-error">{% trans "ERROR:" %}</span>
                         <div class="transcode-error">
-                            <pre> {{ transcode.error_message }}</pre>
+                            <pre>{{ transcode.error_message|format_error_message }}</pre>
                         </div>
                     {% endif %}
                 </li>

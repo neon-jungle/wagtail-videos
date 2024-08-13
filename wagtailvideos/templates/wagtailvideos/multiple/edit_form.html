@@ -1,20 +1,8 @@
 {% load i18n %}
-<form action="{% url 'wagtailvideos:edit_multiple' video.id %}" method="POST" enctype="multipart/form-data">
-    <ul class="fields">
-        {% csrf_token %}
-        {% for field in form %}
-            {% if field.is_hidden %}
-                {{ field }}
-            {% else %}
-                <li>{% include "wagtailadmin/shared/field.html" %}</li>
-            {% endif %}
-        {% endfor %}
-        <li>
-            <input class="button" type="submit" value="{% trans 'Update' %}" />
-            <a href="{% url 'wagtailvideos:delete_multiple' video.id %}" class="delete button button-secondary no">{% trans "Delete" %}</a>
-        </li>
-    </ul>
-</form>
+
+{% include "wagtailadmin/generic/multiple_upload/edit_form.html" %}
+
+{# little bit of js ran to update the video thumbnail #}
 <div data-video-thumb="{{ video.id }}" class="thumb icon icon-media hasthumb">
     {% if video.thumbnail %}
     <img src="{{ video.thumbnail.url }}" alt="{% trans 'Video thumbnail' %}" />

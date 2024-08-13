@@ -1,4 +1,5 @@
 from django import template
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 # {% video self.intro_video extra_att extra_att %}
@@ -34,3 +35,9 @@ class VideoNode(template.Node):
             raise template.TemplateSyntaxError("video tag requires a Video object as the first parameter")
 
         return video.video_tag(self.attrs)
+
+
+@register.filter
+def format_error_message(error_message):
+    # For outputting ffmpeg errors in the admin, just used internally
+    return mark_safe(error_message.replace('\\n', '<br>'))

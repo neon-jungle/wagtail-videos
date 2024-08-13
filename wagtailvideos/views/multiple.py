@@ -1,11 +1,15 @@
-from django.http import HttpResponseBadRequest, JsonResponse
-from django.shortcuts import get_object_or_404, render
-from django.template.loader import render_to_string
-from django.utils.encoding import force_str
-from django.views.decorators.http import require_POST
-from django.views.decorators.vary import vary_on_headers
+import os
+
 from wagtail.admin.auth import PermissionPolicyChecker
-from wagtail.search.backends import get_search_backends
+from wagtail.admin.views.generic.multiple_upload import AddView as BaseAddView
+from wagtail.admin.views.generic.multiple_upload import \
+    CreateFromUploadView as BaseCreateFromUploadView
+from wagtail.admin.views.generic.multiple_upload import \
+    DeleteUploadView as BaseDeleteUploadView
+from wagtail.admin.views.generic.multiple_upload import \
+    DeleteView as BaseDeleteView
+from wagtail.admin.views.generic.multiple_upload import \
+    EditView as BaseEditView
 
 from wagtailvideos import get_video_model
 from wagtailvideos.forms import get_video_form
@@ -14,13 +18,12 @@ from wagtailvideos.permissions import permission_policy
 permission_checker = PermissionPolicyChecker(permission_policy)
 
 
-def get_video_edit_form(VideoModel):
-    VideoForm = get_video_form(VideoModel)
+def get_video_edit_form(video_model):
+    VideoForm = get_video_form(video_model)
 
-    # Make a new form with the file and focal point fields excluded
     class VideoEditForm(VideoForm):
         class Meta(VideoForm.Meta):
-            model = VideoModel
+            model = video_model
             exclude = (
                 'file',
             )
@@ -28,115 +31,110 @@ def get_video_edit_form(VideoModel):
     return VideoEditForm
 
 
-@vary_on_headers('X-Requested-With')
-def add(request):
-    # TODO replace with wagtail.admin.views.generic.multiple_upload.AddView subclass
-    Video = get_video_model()
-    VideoForm = get_video_form(Video)
+class AddView(BaseAddView):
+    permission_policy = permission_policy
+    template_name = 'wagtailvideos/multiple/add.html'
+    edit_form_template_name = 'wagtailvideos/multiple/edit_form.html'
 
-    collections = permission_policy.collections_user_has_permission_for(request.user, 'add')
-    if len(collections) > 1:
-        collections_to_choose = collections
-    else:
-        # no need to show a collections chooser
-        collections_to_choose = None
+    edit_object_url_name = "wagtailvideos:edit_multiple"
+    delete_object_url_name = "wagtailvideos:delete_multiple"
+    edit_object_form_prefix = "video"
+    context_object_name = "video"
+    context_object_id_name = "video_id"
 
-    if request.method == 'POST':
-        if request.headers.get('x-requested-with') != 'XMLHttpRequest':
-            return HttpResponseBadRequest("Cannot POST to this view without AJAX")
+    edit_upload_url_name = "wagtailvideos:create_multiple_from_uploaded_image"
+    delete_upload_url_name = "wagtailvideos:delete_upload_multiple"
+    edit_upload_form_prefix = "uploaded-video"
+    context_upload_name = "uploaded_video"
+    context_upload_id_name = "uploaded_file_id"
 
-        if not request.FILES:
-            return HttpResponseBadRequest("Must upload a file")
+    def get_model(self):
+        return get_video_model()
 
-        # Build a form for validation
-        form = VideoForm({
-            'title': request.FILES['files[]'].name,
-            'collection': request.POST.get('collection'),
-        }, {
-            'file': request.FILES['files[]'],
-        })
-        if form.is_valid():
-            # Save
-            video = form.save(commit=False)
-            video.uploaded_by_user = request.user
-            video.save()
+    def get_upload_form_class(self):
+        return get_video_form(self.model)
 
-            # Success! Send back an edit form
-            return JsonResponse({
-                'success': True,
-                'video_id': int(video.id),
-                'form': render_to_string('wagtailvideos/multiple/edit_form.html', {
-                    'video': video,
-                    'form': get_video_edit_form(Video)(
-                        instance=video, prefix='video-%d' % video.id),
-                }, request=request),
-            })
-        else:
-            # Validation error
-            return JsonResponse({
-                'success': False,
+    def get_edit_form_class(self):
+        return get_video_edit_form(self.model)
 
-                # https://github.com/django/django/blob/stable/1.6.x/django/forms/util.py#L45
-                'error_message': '\n'.join(['\n'.join([force_str(i) for i in v]) for k, v in form.errors.items()]),
-            })
-    else:
-        form = VideoForm()
+    def save_object(self, form):
+        video = form.save(commit=False)
+        video.uploaded_by_user = self.request.user
+        video.save()
+        return video
 
-    return render(request, 'wagtailvideos/multiple/add.html', {
-        'max_filesize': form.fields['file'].max_upload_size,
-        'help_text': form.fields['file'].help_text,
-        'error_max_file_size': form.fields['file'].error_messages['file_too_large_unknown_size'],
-        'error_accepted_file_types': form.fields['file'].error_messages['invalid_video_format'],
-        'collections': collections_to_choose,
-    })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context.update(
+            {
+                "max_filesize": self.form.fields["file"].max_upload_size,
+                "max_title_length": self.form.fields["title"].max_length,
+                "error_max_file_size": self.form.fields["file"].error_messages[
+                    "file_too_large_unknown_size"
+                ],
+                "error_accepted_file_types": self.form.fields["file"].error_messages[
+                    "invalid_video_format"
+                ],
+            }
+        )
+
+        return context
 
 
-@require_POST
-def edit(request, video_id, callback=None):
-    Video = get_video_model()
-    VideoForm = get_video_edit_form(Video)
+class EditView(BaseEditView):
+    permission_policy = permission_policy
+    pk_url_kwarg = "video_id"
+    edit_object_form_prefix = "video"
+    context_object_name = "video"
+    context_object_id_name = "video_id"
+    edit_object_url_name = "wagtailvideos:edit_multiple"
+    delete_object_url_name = "wagtailvideos:delete_multiple"
 
-    video = get_object_or_404(Video, id=video_id)
+    def get_model(self):
+        return get_video_model()
 
-    if request.headers.get('x-requested-with') != 'XMLHttpRequest':
-        return HttpResponseBadRequest("Cannot POST to this view without AJAX")
+    def get_edit_form_class(self):
+        return get_video_edit_form(self.model)
 
-    form = VideoForm(
-        request.POST, request.FILES, instance=video, prefix='video-' + video_id
-    )
 
-    if form.is_valid():
+class DeleteView(BaseDeleteView):
+    permission_policy = permission_policy
+    pk_url_kwarg = "video_id"
+    context_object_id_name = "video_id"
+
+    def get_model(self):
+        return get_video_model()
+
+
+class CreateFromUploadedVideoView(BaseCreateFromUploadView):
+    edit_upload_url_name = "wagtailvideos:create_multiple_from_uploaded_image"
+    delete_upload_url_name = "wagtailvideos:delete_upload_multiple"
+    upload_pk_url_kwarg = "uploaded_file_id"
+    edit_upload_form_prefix = "uploaded-video"
+    context_object_id_name = "video_id"
+    context_upload_name = "uploaded_video"
+
+    def get_model(self):
+        return get_video_model()
+
+    def get_edit_form_class(self):
+        return get_video_edit_form(self.model)
+
+    def save_object(self, form):
+        #  See wagtailimages.views.multiple.CreateFromUploadedImageView.save_object
+        self.object.file.save(
+            os.path.basename(self.upload.file.name), self.upload.file.file, save=False
+        )
+        self.object.uploaded_by_user = self.request.user
+
+        self.object._set_image_file_metadata()
+
         form.save()
 
-        # Reindex the video to make sure all tags are indexed
-        for backend in get_search_backends():
-            backend.add(video)
 
-        return JsonResponse({
-            'success': True,
-            'video_id': int(video_id),
-        })
-    else:
-        return JsonResponse({
-            'success': False,
-            'video_id': int(video_id),
-            'form': render_to_string('wagtailvideos/multiple/edit_form.html', {
-                'video': video,
-                'form': form,
-            }, request=request),
-        })
+class DeleteUploadView(BaseDeleteUploadView):
+    upload_pk_url_kwarg = "uploaded_file_id"
 
-
-@require_POST
-def delete(request, video_id):
-    video = get_object_or_404(get_video_model(), id=video_id)
-
-    if request.headers.get('x-requested-with') != 'XMLHttpRequest':
-        return HttpResponseBadRequest("Cannot POST to this view without AJAX")
-
-    video.delete()
-
-    return JsonResponse({
-        'success': True,
-        'video_id': int(video_id),
-    })
+    def get_model(self):
+        return get_video_model()
