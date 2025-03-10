@@ -121,6 +121,17 @@ Transcode can be disabled using the ``WAGTAIL_VIDEOS_DISABLE_TRANSCODE`` setting
     # settings.py
     WAGTAIL_VIDEOS_DISABLE_TRANSCODE = True
 
+Modify maximum file size:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Maximum file size that can be uploaded is defaulted to 1GB. This can be overriden using the
+``WAGTAILVIDEOS_MAX_UPLOAD_SIZE`` setting
+
+.. code:: django
+
+    # settings.py
+    WAGTAILVIDEOS_MAX_UPLOAD_SIZE = 1024*1024*1024
+
 Modify Thumbnail extension:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
