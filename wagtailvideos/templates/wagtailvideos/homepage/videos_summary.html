@@ -3,10 +3,10 @@
 <li>
     {% icon name="media" %}
     <a href="{% url 'wagtailvideos:index' %}">
-        {% blocktrans count counter=total_videos with total_videos|intcomma as total %}
-            <span>{{ total }}</span> Video <span class="visuallyhidden" style="display: none;">created in {{ site_name }}</span>
+        {% blocktrans trimmed count counter=total_videos with total_videos|intcomma as total %}
+            {{ total }} Video <span class="w-sr-only">created in {{ site_name }}</span>
         {% plural %}
-            <span>{{ total }}</span> Videos <span class="visuallyhidden" style="display: none;">created in {{ site_name }}</span>
+            {{ total }} Videos <span class="w-sr-only">created in {{ site_name }}</span>
         {% endblocktrans %}
     </a>
 </li>
