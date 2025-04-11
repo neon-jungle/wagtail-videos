@@ -20,7 +20,6 @@ setup(
         "wagtail>=6.1",
         "Django>=3.2",
         "bcp47==0.0.4",
-        "wagtail-modeladmin>=2.0.0",
     ],
     zip_safe=False,
     license="BSD License",

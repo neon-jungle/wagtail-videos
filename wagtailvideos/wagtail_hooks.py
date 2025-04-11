@@ -8,9 +8,9 @@ from wagtail.admin.menu import Menu, MenuItem, SubmenuMenuItem
 from wagtail.admin.panels import InlinePanel
 from wagtail.admin.search import SearchArea
 from wagtail.admin.site_summary import SummaryItem
-from wagtail_modeladmin.options import ModelAdmin, modeladmin_register
+from wagtail.admin.viewsets.model import ModelViewSet
 
-from wagtailvideos import get_video_model, is_modeladmin_installed, urls
+from wagtailvideos import get_video_model, urls
 from wagtailvideos.edit_handlers import VideoChooserPanel
 from wagtailvideos.forms import GroupVideoPermissionFormSet
 from wagtailvideos.views.chooser import viewset as chooser_viewset
@@ -20,26 +20,24 @@ from .permissions import permission_policy
 Video = get_video_model()
 
 
-class TracksAdmin(ModelAdmin):
+class TracksAdminViewset(ModelViewSet):
     model = Video.get_track_listing_model()
-    menu_icon = 'openquote'
+    icon = 'openquote'
     menu_label = _('Text tracks')
+    url_prefix = 'videos/tracks'
 
     list_display = ('__str__', 'track_count')
-
-    def track_count(self, track_listing):
-        return track_listing.tracks.count()
-    track_count.short_description = 'No. tracks'
 
     panels = [
         VideoChooserPanel('video'),
         InlinePanel('tracks', heading="Tracks")
     ]
 
+tracks_viewset = TracksAdminViewset("wagtailvideos_tracks")
 
-if is_modeladmin_installed():
-    modeladmin_register(TracksAdmin)
-
+@hooks.register("register_admin_viewset")
+def register_tracklist_viewset():
+    return tracks_viewset
 
 @hooks.register('register_admin_urls')
 def register_admin_urls():
@@ -65,29 +63,16 @@ class VideoMenu(Menu):
         return [
             MenuItem(_('Manage videos'), reverse('wagtailvideos:index'),
                      name='videos', icon_name='media', order=100),
-            TracksAdmin().get_menu_item(),
+            tracks_viewset.get_menu_item(),
         ]
 
 
 @hooks.register('register_admin_menu_item')
 def register_images_menu_item():
-    if is_modeladmin_installed():
-        return SubmenuMenuItem(
-            _('Videos'), VideoMenu(),
-            name='videos', icon_name='media', order=300
-        )
-    else:
-        return MenuItem(
-            _('Videos'), reverse('wagtailvideos:index'),
-            name='videos', icon_name='media', order=300
-        )
-
-
-@hooks.register('construct_main_menu')
-def hide_track_listing_main(request, menu_items):
-    # Dumb but we need to remove the auto generated menu item because we add it to the video submenu
-    if is_modeladmin_installed():
-        menu_items[:] = [item for item in menu_items if item.name != 'text-tracks']
+    return SubmenuMenuItem(
+        _('Videos'), VideoMenu(),
+        name='videos', icon_name='media', order=300
+    )
 
 
 class VideoSummaryItem(SummaryItem):
