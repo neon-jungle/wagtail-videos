@@ -9,10 +9,8 @@ from wagtail.admin.auth import PermissionPolicyChecker
 from wagtail.admin.filters import BaseMediaFilterSet
 from wagtail.admin.views import generic
 from wagtail.search.backends import get_search_backends
-from wagtail_modeladmin.helpers import AdminURLHelper
 
-from wagtailvideos import (
-    get_transcoder_backend, get_video_model, is_modeladmin_installed)
+from wagtailvideos import (get_transcoder_backend, get_video_model)
 from wagtailvideos.forms import VideoTranscodeAdminForm, get_video_form
 from wagtailvideos.permissions import permission_policy
 
@@ -98,14 +96,10 @@ def edit(request, video_id):
         ).format(video.title), buttons=[
             messages.button(reverse('wagtailvideos:delete', args=(video.id,)), _('Delete'))
         ])
-    if is_modeladmin_installed():
-        url_helper = AdminURLHelper(Video.get_track_listing_model())
-        if hasattr(video, 'track_listing'):
-            action_url = url_helper.get_action_url('edit', instance_pk=video.track_listing.pk)
-        else:
-            action_url = url_helper.create_url
+    if hasattr(video, 'track_listing'):
+        action_url = reverse('wagtailvideos_tracks:edit', args=(video.track_listing.pk,))
     else:
-        action_url = ''
+        action_url = reverse('wagtailvideos_tracks:create', args=(video.pk,))
 
     return render(request, "wagtailvideos/videos/edit.html", {
         'video': video,

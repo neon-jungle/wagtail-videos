@@ -11,11 +11,6 @@ default_transcoder_settings = {
 }
 
 
-def is_modeladmin_installed():
-    from django.apps import apps
-    return apps.is_installed('wagtail_modeladmin')
-
-
 def get_video_model_string():
     return getattr(settings, 'WAGTAILVIDEOS_VIDEO_MODEL', 'wagtailvideos.Video')
 

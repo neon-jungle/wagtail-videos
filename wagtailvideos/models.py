@@ -258,6 +258,10 @@ class AbstractTrackListing(ClusterableModel):
     def get_track_model(cls):
         return cls.tracks.rel.related_model
 
+    def track_count(self):
+        return self.tracks.count()
+    track_count.short_description = _('No. tracks')
+
     class Meta:
         abstract = True
 
