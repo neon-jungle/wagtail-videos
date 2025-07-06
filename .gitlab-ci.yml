@@ -16,12 +16,12 @@ head:
   before_script:
     - pip install .
 
-# Bring back with next LTS (6.3)
-# lts_52:
-#   image: python:3.11
-#   extends: .python_test
-#   before_script:
-#     - pip install . wagtail~=5.2 django~=4.2
+
+lts_63:
+  image: python:3.11
+  extends: .python_test
+  before_script:
+    - pip install . wagtail~=6.3 django~=4.2
 
 flake8:
   stage: lint
