@@ -1,5 +1,6 @@
 from django import forms
 from django.forms.models import modelform_factory
+from django.utils.text import capfirst
 from django.utils.translation import gettext as _
 from wagtail.admin import widgets
 from wagtail.admin.forms.collections import (
@@ -28,7 +29,7 @@ class BaseVideoForm(BaseCollectionMemberForm):
 def formfield_for_dbfield(db_field, **kwargs):
     # Check if this is the file field
     if db_field.name == 'file':
-        return WagtailVideoField(**kwargs)
+        return WagtailVideoField(label=capfirst(db_field.verbose_name), **kwargs)
 
     # For all other fields, just call its formfield() method.
     return db_field.formfield(**kwargs)

@@ -47,7 +47,12 @@ def get_upload_to(instance, filename):
 class AbstractVideo(CollectionMember, index.Indexed, models.Model):
     title = models.CharField(max_length=255, verbose_name=_("title"))
     file = models.FileField(verbose_name=_("file"), upload_to=get_upload_to)
-    thumbnail = models.ImageField(upload_to=get_upload_to, null=True, blank=True)
+    thumbnail = models.ImageField(
+        upload_to=get_upload_to,
+        null=True,
+        blank=True,
+        verbose_name=_("thumbnail"),
+    )
     created_at = models.DateTimeField(
         verbose_name=_("created at"), auto_now_add=True, db_index=True
     )

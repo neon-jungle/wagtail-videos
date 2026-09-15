@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 from wagtail.admin import messages
 from wagtail.admin.auth import PermissionPolicyChecker
@@ -41,11 +41,11 @@ class IndexView(generic.IndexView):
     add_url_name = "wagtailvideos:add_multiple"
     edit_url_name = "wagtailvideos:edit"
     index_results_url_name = 'wagtailvideos:index_results'
-    add_item_label = "Add a video"
+    add_item_label = _("Add a video")
 
     def get_breadcrumbs_items(self):
         return self.breadcrumbs_items + [
-            {"url": "", "label": "Videos"},
+            {"url": "", "label": _("Videos")},
         ]
 
     def get_filterset_kwargs(self):
