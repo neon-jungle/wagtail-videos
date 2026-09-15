@@ -72,9 +72,16 @@ class VideoMenu(Menu):
         ]
 
 
+class VideoMenuItem(SubmenuMenuItem):
+    def is_shown(self, request):
+        return permission_policy.user_has_any_permission(
+            request.user, ["add", "change", "delete"]
+        )
+
+
 @hooks.register("register_admin_menu_item")
 def register_images_menu_item():
-    return SubmenuMenuItem(
+    return VideoMenuItem(
         _("Videos"), VideoMenu(), name="videos", icon_name="media", order=300
     )
 
