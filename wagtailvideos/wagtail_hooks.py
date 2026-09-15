@@ -4,6 +4,7 @@ from django.urls import path, reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from wagtail import hooks
+from wagtail.admin.admin_url_finder import ModelAdminURLFinder, register_admin_url_finder
 from wagtail.admin.menu import Menu, MenuItem, SubmenuMenuItem
 from wagtail.admin.panels import InlinePanel
 from wagtail.admin.search import SearchArea
@@ -37,6 +38,14 @@ tracks_viewset = TracksAdminViewset("wagtailvideos_tracks")
 @hooks.register("register_admin_viewset")
 def register_tracklist_viewset():
     return tracks_viewset
+
+
+class VideoAdminURLFinder(ModelAdminURLFinder):
+    edit_url_name = "wagtailvideos:edit"
+    permission_policy = permission_policy
+
+
+register_admin_url_finder(Video, VideoAdminURLFinder)
 
 
 @hooks.register("register_admin_urls")
