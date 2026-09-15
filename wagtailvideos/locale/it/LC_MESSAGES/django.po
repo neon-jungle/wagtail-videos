@@ -1,0 +1,520 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: wagtailvideos\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-15 20:49+1000\n"
+"PO-Revision-Date: 2026-09-11 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: wagtailvideos/enums.py:6
+msgid "Default"
+msgstr "Predefinita"
+
+#: wagtailvideos/enums.py:7
+msgid "Low"
+msgstr "Bassa"
+
+#: wagtailvideos/enums.py:8
+msgid "High"
+msgstr "Alta"
+
+#: wagtailvideos/enums.py:12
+msgid "VP8 and Vorbis in WebM"
+msgstr "VP8 e Vorbis in WebM"
+
+#: wagtailvideos/enums.py:13
+msgid "H.264 and AAC in Mp4"
+msgstr "H.264 e AAC in Mp4"
+
+#: wagtailvideos/enums.py:14
+msgid "Theora and Vorbis in Ogg"
+msgstr "Theora e Vorbis in Ogg"
+
+#: wagtailvideos/enums.py:38
+msgid "Subtitles"
+msgstr "Sottotitoli"
+
+#: wagtailvideos/enums.py:39
+msgid "Captions"
+msgstr "Didascalie"
+
+#: wagtailvideos/enums.py:40
+msgid "Descriptions"
+msgstr "Descrizioni"
+
+#: wagtailvideos/enums.py:41
+msgid "Chapters"
+msgstr "Capitoli"
+
+#: wagtailvideos/enums.py:42
+msgid "Metadata"
+msgstr "Metadati"
+
+#: wagtailvideos/fields.py:19
+#, python-format
+msgid "Maximum filesize: %(max_upload_size)s."
+msgstr "Dimensione massima del file: %(max_upload_size)s."
+
+#: wagtailvideos/fields.py:26
+#, python-format
+msgid "Not a valid video. Content type was %s."
+msgstr "Video non valido. Il tipo di contenuto era %s."
+
+#: wagtailvideos/fields.py:30
+#, python-format
+msgid "This file is too big (%%s). Maximum filesize %s."
+msgstr "Questo file è troppo grande (%%s). Dimensione massima del file %s."
+
+#: wagtailvideos/fields.py:34
+#, python-format
+msgid "This file is too big. Maximum filesize %s."
+msgstr "Questo file è troppo grande. Dimensione massima del file %s."
+
+#: wagtailvideos/forms.py:78
+msgid "Add"
+msgstr "Aggiungi"
+
+#: wagtailvideos/forms.py:78
+msgid "Add/edit videos you own"
+msgstr "Aggiungi/modifica video di tua proprietà"
+
+#: wagtailvideos/forms.py:79
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:137
+#: wagtailvideos/views/videos.py:167
+msgid "Edit"
+msgstr "Modifica"
+
+#: wagtailvideos/forms.py:79
+msgid "Edit any video"
+msgstr "Modifica qualsiasi video"
+
+#: wagtailvideos/forms.py:80
+msgid "Choose"
+msgstr "Scegli"
+
+#: wagtailvideos/forms.py:80
+msgid "Choose video"
+msgstr "Scegli un video"
+
+#: wagtailvideos/models.py:48
+msgid "title"
+msgstr "titolo"
+
+#: wagtailvideos/models.py:49 wagtailvideos/models.py:248
+msgid "file"
+msgstr "file"
+
+#: wagtailvideos/models.py:52
+msgid "created at"
+msgstr "creato alle"
+
+#: wagtailvideos/models.py:57
+msgid "uploaded by user"
+msgstr "caricato dall'utente"
+
+#: wagtailvideos/models.py:64
+msgid "tags"
+msgstr "tags"
+
+#: wagtailvideos/models.py:67
+msgid "width"
+msgstr "larghezza"
+
+#: wagtailvideos/models.py:68
+msgid "height"
+msgstr "altezza"
+
+#: wagtailvideos/models.py:287
+msgid "No. tracks"
+msgstr "N. tracce"
+
+#: wagtailvideos/models.py:300
+msgid "File"
+msgstr "File"
+
+#: wagtailvideos/models.py:304
+msgid "Kind"
+msgstr "Tipo"
+
+#: wagtailvideos/models.py:309
+msgid "A user-readable title of the text track."
+msgstr "Un titolo leggibile dall'utente per la traccia di testo."
+
+#: wagtailvideos/models.py:310
+msgid "Label"
+msgstr "Etichetta"
+
+#: wagtailvideos/models.py:317
+msgid "Required if type is \"Subtitle\""
+msgstr "Obbligatorio se il tipo è \"Sottotitoli\""
+
+#: wagtailvideos/models.py:318
+msgid "Language"
+msgstr "Lingua"
+
+#: wagtailvideos/templates/wagtailvideos/chooser/chooser.html:20
+msgid "Popular tags"
+msgstr "Tags popolari"
+
+#: wagtailvideos/templates/wagtailvideos/chooser/results.html:4
+msgid "Latest videos"
+msgstr "Ultimi video"
+
+#: wagtailvideos/templates/wagtailvideos/chooser/results.html:23
+#: wagtailvideos/templates/wagtailvideos/multiple/edit_form.html:8
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:56
+#: wagtailvideos/templates/wagtailvideos/videos/results.html:14
+msgid "Video thumbnail"
+msgstr "Miniatura del video"
+
+#: wagtailvideos/templates/wagtailvideos/chooser/results.html:44
+msgid "You haven't uploaded any videos in this collection."
+msgstr "Non hai caricato nessun video in questa raccolta."
+
+#: wagtailvideos/templates/wagtailvideos/chooser/results.html:46
+msgid "You haven't uploaded any videos."
+msgstr "Non hai caricato alcun video."
+
+#: wagtailvideos/templates/wagtailvideos/chooser/results.html:49
+msgid ""
+"Why not <a class=\"upload-one-now\" href=\"#tab-upload\" data-tab-"
+"trigger>upload one now</a>?"
+msgstr ""
+"Perché non <a class=\"upload-one-now\" href=\"#tab-upload\" data-tab-"
+"trigger>caricarne uno ora</a>?"
+
+#: wagtailvideos/templates/wagtailvideos/homepage/videos_summary.html:6
+#, python-format
+msgid ""
+"%(total)s Video <span class=\"w-sr-only\">created in %(site_name)s</span>"
+msgid_plural ""
+"%(total)s Videos <span class=\"w-sr-only\">created in %(site_name)s</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wagtailvideos/templates/wagtailvideos/multiple/add.html:3
+msgid "Add multiple videos"
+msgstr "Aggiungi più video"
+
+#: wagtailvideos/templates/wagtailvideos/multiple/add.html:10
+msgid "Add videos"
+msgstr "Aggiungi video"
+
+#: wagtailvideos/templates/wagtailvideos/multiple/add.html:17
+msgid "Drag and drop videos into this area to upload immediately."
+msgstr "Trascina video in quest'area per caricarli immediatamente."
+
+#: wagtailvideos/templates/wagtailvideos/multiple/add.html:22
+msgid "Or choose from your computer"
+msgstr "Oppure scegli dal tuo computer"
+
+#: wagtailvideos/templates/wagtailvideos/multiple/add.html:28
+msgid "Add to collection:"
+msgstr "Aggiungi alla raccolta:"
+
+#: wagtailvideos/templates/wagtailvideos/multiple/add.html:58
+msgid ""
+"Upload successful. Please update this video with a more appropriate title, "
+"if necessary. You may also delete the video completely if the upload wasn't "
+"required."
+msgstr ""
+"Caricamento riuscito. Se necessario, aggiorna il titolo di questo video con "
+"uno più appropriato. Puoi anche eliminare completamente il video se il "
+"caricamento non era necessario."
+
+#: wagtailvideos/templates/wagtailvideos/multiple/add.html:59
+msgid "Sorry, upload failed."
+msgstr "Spiacente, caricamento fallito."
+
+#: wagtailvideos/templates/wagtailvideos/multiple/add.html:60
+msgid "Video updated."
+msgstr "Video aggiornato."
+
+#: wagtailvideos/templates/wagtailvideos/permissions/includes/video_permissions_formset.html:4
+msgid "Video permissions"
+msgstr "Permessi per il video"
+
+#: wagtailvideos/templates/wagtailvideos/permissions/includes/video_permissions_formset.html:5
+msgid "Add an video permission"
+msgstr "Aggiungi un permesso per il video"
+
+#: wagtailvideos/templates/wagtailvideos/videos/add.html:3
+#: wagtailvideos/templates/wagtailvideos/videos/index.html:9
+msgid "Add a video"
+msgstr "Aggiungi un video"
+
+#: wagtailvideos/templates/wagtailvideos/videos/add.html:18
+msgid "Add video"
+msgstr "Aggiungi video"
+
+#: wagtailvideos/templates/wagtailvideos/videos/add.html:32
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:39
+msgid "Save"
+msgstr "Salva"
+
+#: wagtailvideos/templates/wagtailvideos/videos/confirm_delete.html:4
+#: wagtailvideos/templates/wagtailvideos/videos/confirm_delete.html:7
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:41
+msgid "Delete video"
+msgstr "Elimina video"
+
+#: wagtailvideos/templates/wagtailvideos/videos/confirm_delete.html:15
+msgid "Are you sure you want to delete this video?"
+msgstr "Sei sicuro di voler eliminare questo video?"
+
+#: wagtailvideos/templates/wagtailvideos/videos/confirm_delete.html:18
+msgid "Yes, delete"
+msgstr "Si, elimina"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:5
+#, python-format
+msgid "Editing video %(title)s"
+msgstr "Modifica video %(title)s"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:12
+msgid "Editing"
+msgstr "Modifica"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:29
+msgid "Change video file:"
+msgstr "Cambia file video:"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:55
+msgid "Thumbnail"
+msgstr "Miniatura"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:58
+msgid "Filesize"
+msgstr "Dimensione file"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:59
+msgid "File not found"
+msgstr "File non trovato"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:61
+msgid "Duration"
+msgstr "Durata"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:64
+msgid "Usage"
+msgstr "Utilizzo"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:66
+#, python-format
+msgid "Used %(usage_count)s time"
+msgid_plural "Used %(usage_count)s times"
+msgstr[0] ""
+msgstr[1] ""
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:72
+msgid "Transcodes"
+msgstr "Transcodifiche"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:73
+msgid ""
+"If you wish to generate HTML5 compliant transcodes use the form below. This "
+"may take a while depending on the length of the video."
+msgstr ""
+"Se desideri generare transcodifiche compatibili con HTML5, usa il modulo qui "
+"sotto. Questo potrebbe richiedere del tempo a seconda della durata del video."
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:75
+msgid "Available Transcodes"
+msgstr "Transcodifiche disponibili"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:82
+#, python-format
+msgid ""
+"\n"
+"                            %(media_format)s (%(quality)s quality)\n"
+"                        "
+msgstr ""
+"\n"
+"                            %(media_format)s (qualità %(quality)s)\n"
+"                        "
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:89
+msgid "delete"
+msgstr "elimina"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:93
+msgid "(Processing... hold tight)"
+msgstr "(Elaborazione in corso… attendere)"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:97
+msgid "ERROR:"
+msgstr "ERRORE:"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:106
+msgid "Create transcode"
+msgstr "Crea transcodifica"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:114
+msgid "Start"
+msgstr "Avvia"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:120
+msgid "Transcoding is disabled."
+msgstr "La transcodifica è disabilitata."
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:123
+msgid "The selected transcoding backend is not installed on your server."
+msgstr ""
+"Il backend di transcodifica selezionato non è installato sul tuo server."
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:126
+msgid ""
+"The selected transcoding backend is not installed on your server and you "
+"have disabled transcodes. Please install the backend requirements and enable "
+"transcoding if you wish to transcode videos into an HTML5 video compliant "
+"format."
+msgstr ""
+"Il backend di transcodifica selezionato non è installato sul tuo server e "
+"hai disabilitato le transcodifiche. Installa i requisiti del backend e "
+"abilita la transcodifica se desideri transcodificare i video in un formato "
+"compatibile con HTML5."
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:129
+msgid "Tracks"
+msgstr "Tracce"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:130
+msgid ""
+"You can add/edit subtitles or accessibility captions for this video. For "
+"information about the filetype that should be used see the mozilla docs on "
+"<a href=\"https://developer.mozilla.org/en-US/docs/Web/API/"
+"WebVTT_API\">WebVTT</a>"
+msgstr ""
+"Puoi aggiungere/modificare sottotitoli o didascalie per l'accessibilità di "
+"questo video. Per informazioni sul tipo di file da utilizzare, consulta la "
+"documentazione Mozilla su <a target=\"_blank\" href=\"https://"
+"developer.mozilla.org/en-US/docs/Web/API/WebVTT_API\">WebVTT</a>"
+
+#: wagtailvideos/templates/wagtailvideos/videos/edit.html:139
+msgid "Add tracks"
+msgstr "Aggiungi tracce"
+
+#: wagtailvideos/templates/wagtailvideos/videos/index.html:4
+#: wagtailvideos/wagtail_hooks.py:78
+msgid "Videos"
+msgstr "Video"
+
+#: wagtailvideos/templates/wagtailvideos/videos/results.html:30
+#, python-format
+msgid "Sorry, no videos match \"<em>%(query_string)s</em>\""
+msgstr "Spiacenti, nessun video corrisponde a \"<em>%(query_string)s</em>\""
+
+#: wagtailvideos/templates/wagtailvideos/videos/results.html:35
+#, python-format
+msgid ""
+"You've not uploaded any videos in this collection. Why not <a "
+"href=\"%(wagtailvideos_add_video_url)s\">add one now</a>?"
+msgstr ""
+"Non hai ancora caricato nessun video in questa raccolta. Perché non <a "
+"href=\"%(wagtailvideos_add_video_url)s\">aggiungerne uno ora</a>?"
+
+#: wagtailvideos/templates/wagtailvideos/videos/results.html:37
+#, python-format
+msgid ""
+"You've not uploaded any videos. Why not <a "
+"href=\"%(wagtailvideos_add_video_url)s\">add one now</a>?"
+msgstr ""
+"Non hai ancora caricato nessun video. Perché non <a "
+"href=\"%(wagtailvideos_add_video_url)s\">aggiungerne uno ora</a>?"
+
+#: wagtailvideos/templates/wagtailvideos/videos/usage.html:3
+#, python-format
+msgid "Usage of %(title)s"
+msgstr "Utilizzo di %(title)s"
+
+#: wagtailvideos/templates/wagtailvideos/videos/usage.html:5
+msgid "Usage of"
+msgstr "Utilizzo di"
+
+#: wagtailvideos/templates/wagtailvideos/videos/usage.html:16
+msgid "Title"
+msgstr "Titolo"
+
+#: wagtailvideos/templates/wagtailvideos/videos/usage.html:17
+msgid "Parent"
+msgstr "Padre"
+
+#: wagtailvideos/templates/wagtailvideos/videos/usage.html:18
+msgid "Type"
+msgstr "Tipo"
+
+#: wagtailvideos/templates/wagtailvideos/videos/usage.html:19
+msgid "Status"
+msgstr "Stato"
+
+#: wagtailvideos/templates/wagtailvideos/videos/usage.html:26
+msgid "Edit this page"
+msgstr "Modifica questa pagina"
+
+#: wagtailvideos/views/chooser.py:33 wagtailvideos/views/chooser.py:160
+msgid "Upload"
+msgstr "Carica"
+
+#: wagtailvideos/views/chooser.py:34 wagtailvideos/views/chooser.py:161
+msgid "Uploading…"
+msgstr "Caricamento…"
+
+#: wagtailvideos/views/chooser.py:159 wagtailvideos/widgets.py:18
+msgid "Choose a video"
+msgstr "Scegli un video"
+
+#: wagtailvideos/views/videos.py:86
+#, python-brace-format
+msgid "Video '{0}' updated."
+msgstr "Video '{0}' aggiornato."
+
+#: wagtailvideos/views/videos.py:88
+msgid "The video could not be saved due to errors."
+msgstr "Il video non può essere salvato a causa di errori."
+
+#: wagtailvideos/views/videos.py:95
+msgid ""
+"The source video file could not be found. Please change the source or delete "
+"the video."
+msgstr ""
+"Il file video sorgente non è stato trovato. Modifica la sorgente oppure "
+"elimina il video."
+
+#: wagtailvideos/views/videos.py:97
+msgid "Delete"
+msgstr "Elimina"
+
+#: wagtailvideos/views/videos.py:140
+#, python-brace-format
+msgid "Video '{0}' deleted."
+msgstr "Video '{0}' eliminato."
+
+#: wagtailvideos/views/videos.py:166
+#, python-brace-format
+msgid "Video '{0}' added."
+msgstr "Video '{0}' aggiunto."
+
+#: wagtailvideos/views/videos.py:171
+msgid "The video could not be created due to errors."
+msgstr "Il video non può essere creato a causa di errori."
+
+#: wagtailvideos/wagtail_hooks.py:26
+msgid "Text tracks"
+msgstr "Tracce di testo"
+
+#: wagtailvideos/wagtail_hooks.py:65
+msgid "Manage videos"
+msgstr "Gestisci video"
+
+#: wagtailvideos/wagtail_hooks.py:112
+msgid "Video"
+msgstr "Video"
+
+#~ msgid "thumbnail"
+#~ msgstr "miniatura"
