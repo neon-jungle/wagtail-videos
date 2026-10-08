@@ -5,6 +5,7 @@ CHANGELOG
 -----
 
 - Added chunked upload support for large files
+- Register the permission policy with Wagtail 8's registry instead of setting it on the chooser viewset, which Wagtail 8 deprecates (@mortenthansen)
 
 
 7.2.0

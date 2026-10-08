@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import View
+from wagtail import VERSION as WAGTAIL_VERSION
 from wagtail.admin.auth import PermissionPolicyChecker
 from wagtail.admin.models import popular_tags_for_model
 from wagtail.admin.views.generic.chooser import (
@@ -152,7 +153,10 @@ class VideoChooserViewSet(ChooserViewSet):
     choose_results_view_class = VideoChooseResultsView
     chosen_view_class = VideoChosenView
     create_view_class = VideoUploadView
-    permission_policy = permission_policy
+    if WAGTAIL_VERSION < (8, 0):
+        # Wagtail 8 takes the policy from the registry (see apps.py) and warns
+        # when it is set here; older versions have no registry.
+        permission_policy = permission_policy
     register_widget = False
 
     icon = "media"
